@@ -1,4 +1,8 @@
---- Zorg dat we schone lei hebben (drop in juiste volgorde)
+-- Database en gebruik (pas DB-naam aan indien nodig)
+CREATE DATABASE IF NOT EXISTS tandarts CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE tandarts;
+
+-- Zorg dat we schone lei hebben (drop in juiste volgorde)
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS feedback;
 DROP TABLE IF EXISTS communicatie;

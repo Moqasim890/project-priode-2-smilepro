@@ -1,4 +1,6 @@
---- Zorg dat we schone lei hebben (drop in juiste volgorde)
+-
+
+-- Zorg dat we schone lei hebben (drop in juiste volgorde)
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS feedback;
 DROP TABLE IF EXISTS communicatie;
