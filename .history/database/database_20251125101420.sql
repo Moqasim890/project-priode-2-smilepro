@@ -201,7 +201,7 @@ CREATE TABLE factuur (
 CREATE TABLE communicatie (
     id INT PRIMARY KEY AUTO_INCREMENT,
     patientid INT NOT NULL,
-    medewerkerid INT,
+    medewerkerid INT NOT NULL,
     bericht TEXT NOT NULL,
     verzonden_datum DATETIME NOT NULL,
     isactief TINYINT(1) DEFAULT 1,

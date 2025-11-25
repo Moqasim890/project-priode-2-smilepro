@@ -17,7 +17,7 @@
     <nav class="navbar navbar-dark bg-dark sticky-top navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url('/') }}">
-                Smi
+                <i class="bi bi-lightning-fill"></i> Sneakerness
             </a>
 
             {{-- Toggler shows < lg; at lg+ the offcanvas turns into inline content --}} <button class="navbar-toggler"
@@ -49,7 +49,7 @@
     {{-- FOOTER --}}
     <footer class="py-4 border-top bg-body">
         <div class="container d-flex flex-column flex-lg-row justify-content-between align-items-center gap-2">
-            <small>© {{ date('Y') }} SmilePro - tandheelkunde pratijk</small>
+            <small>© {{ date('Y') }} Sneakerness® — Van Nellefabriek, Rotterdam</small>
             <div class="d-flex gap-3">
                 <a href="{{ url('/info') }}">Praktische info</a>
                 <a href="{{ url('/contact') }}">Contact</a>

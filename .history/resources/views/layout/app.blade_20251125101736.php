@@ -49,7 +49,7 @@
     {{-- FOOTER --}}
     <footer class="py-4 border-top bg-body">
         <div class="container d-flex flex-column flex-lg-row justify-content-between align-items-center gap-2">
-            <small>© {{ date('Y') }} SmilePro - tandheelkunde pratijk</small>
+            <small>© {{ date('Y') }} SmilePro - </small>
             <div class="d-flex gap-3">
                 <a href="{{ url('/info') }}">Praktische info</a>
                 <a href="{{ url('/contact') }}">Contact</a>
