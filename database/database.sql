@@ -17,49 +17,47 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- 0. USERS (Gebruiker)
 -- =========================================
 CREATE TABLE users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    gebruikersnaam VARCHAR(100) NOT NULL,
-    wachtwoord VARCHAR(255) NOT NULL, -- bcrypt/argon-hash
-    rolnaam VARCHAR(50) NOT NULL,
-    ingelogd DATETIME DEFAULT NULL,
-    uitgelogd DATETIME DEFAULT NULL,
-    isactief TINYINT(1) NOT NULL DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id              INT             PRIMARY KEY     AUTO_INCREMENT,
+    gebruikersnaam  VARCHAR(100)    NOT NULL,
+    wachtwoord      VARCHAR(255)    NOT NULL, -- bcrypt/argon-hash
+    rolnaam         VARCHAR(50)     NOT NULL,
+    ingelogd        DATETIME                        DEFAULT NULL,
+    uitgelogd       DATETIME                        DEFAULT NULL,
+    isactief        TINYINT(1)      NOT NULL        DEFAULT 1,
+    opmerking       TEXT,
+    datumaangemaakt DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd  DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY ux_users_gebruikersnaam (gebruikersnaam)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================================
 -- 1. PERSOON
--- =========================================
 CREATE TABLE persoon (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    gebruikerid INT DEFAULT NULL,
-    voornaam VARCHAR(100) NOT NULL,
-    tussenvoegsel VARCHAR(20),
-    achternaam VARCHAR(100) NOT NULL,
-    geboortedatum DATE NOT NULL,
-    isactief TINYINT(1) DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id              INT             PRIMARY KEY     AUTO_INCREMENT,
+    gebruikerid     INT                             DEFAULT NULL,
+    voornaam        VARCHAR(100)    NOT NULL,
+    tussenvoegsel   VARCHAR(20),
+    achternaam      VARCHAR(100)    NOT NULL,
+    geboortedatum   DATE            NOT NULL,
+    isactief        TINYINT(1)      DEFAULT 1,
+    opmerking       TEXT,
+    datumaangemaakt DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd  DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX ix_persoon_gebruikerid (gebruikerid),
     CONSTRAINT fk_persoon_users FOREIGN KEY (gebruikerid) REFERENCES users(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================================
 -- 2. PATIENT
--- =========================================
 CREATE TABLE patient (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    persoonid INT NOT NULL,
-    nummer VARCHAR(50) NOT NULL,
-    medischdossier TEXT,
-    isactief TINYINT(1) DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id              INT             PRIMARY KEY     AUTO_INCREMENT,
+    persoonid       INT             NOT NULL,
+    nummer          VARCHAR(50)     NOT NULL,
+    medischdossier  TEXT, -- <-change to longblob to store files
+    isactief        TINYINT(1)      DEFAULT 1,
+    opmerking       TEXT,
+    datumaangemaakt DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd  DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY ux_patient_nummer (nummer),
     INDEX ix_patient_persoonid (persoonid),
     CONSTRAINT fk_patient_persoon FOREIGN KEY (persoonid) REFERENCES persoon(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -67,18 +65,17 @@ CREATE TABLE patient (
 
 -- =========================================
 -- 4. MEDEWERKER
--- =========================================
 CREATE TABLE medewerker (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    persoonid INT NOT NULL,
-    nummer VARCHAR(50) NOT NULL,
-    medewerkertype ENUM('Assistent','Mondhygiënist','Tandarts','Praktijkmanagement') NOT NULL,
-    specialisatie VARCHAR(255),
+    id              INT             PRIMARY KEY     AUTO_INCREMENT,
+    persoonid       INT             NOT NULL,
+    nummer          VARCHAR(50)     NOT NULL,
+    medewerkertype  ENUM('Assistent','Mondhygiënist','Tandarts','Praktijkmanagement') NOT NULL,
+    specialisatie   VARCHAR(255),
     beschikbaarheid TEXT,
-    isactief TINYINT(1) DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    isactief        TINYINT(1)      DEFAULT 1,
+    opmerking       TEXT,
+    datumaangemaakt DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd  DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY ux_medewerker_nummer (nummer),
     INDEX ix_medewerker_persoonid (persoonid),
     CONSTRAINT fk_medewerker_persoon FOREIGN KEY (persoonid) REFERENCES persoon(id) ON DELETE CASCADE ON UPDATE CASCADE
@@ -105,39 +102,37 @@ CREATE TABLE beschikbaarheid (
 
 -- =========================================
 -- 6. CONTACT
--- =========================================
 CREATE TABLE contact (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    patientid INT NOT NULL,
-    straatnaam VARCHAR(100) NOT NULL,
-    huisnummer VARCHAR(10) NOT NULL,
-    toevoeging VARCHAR(10),
-    postcode VARCHAR(10) NOT NULL,
-    plaats VARCHAR(100) NOT NULL,
-    mobiel VARCHAR(20),
-    email VARCHAR(255),
-    isactief TINYINT(1) DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id              INT             PRIMARY KEY     AUTO_INCREMENT,
+    patientid       INT             NOT NULL,
+    straatnaam      VARCHAR(100)    NOT NULL,
+    huisnummer      VARCHAR(10)     NOT NULL,
+    toevoeging      VARCHAR(10),
+    postcode        VARCHAR(10)     NOT NULL,
+    plaats          VARCHAR(100)    NOT NULL,
+    mobiel          VARCHAR(20),
+    email           VARCHAR(255),
+    isactief        TINYINT(1)      DEFAULT 1,
+    opmerking       TEXT,
+    datumaangemaakt DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd  DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX ix_contact_patientid (patientid),
     CONSTRAINT fk_contact_patient FOREIGN KEY (patientid) REFERENCES patient(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================================
 -- 7. AFSPRAKEN
--- =========================================
 CREATE TABLE afspraken (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    patientid INT NOT NULL,
-    medewerkerid INT NOT NULL,
-    datum DATE NOT NULL,
-    tijd TIME NOT NULL,
-    status ENUM('Bevestigd','Geannuleerd') NOT NULL DEFAULT 'Bevestigd',
-    isactief TINYINT(1) DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id              INT             PRIMARY KEY     AUTO_INCREMENT,
+    patientid       INT             NOT NULL,
+    medewerkerid    INT             NOT NULL,
+    datum           DATE            NOT NULL,
+    tijd            TIME            NOT NULL,
+    status          ENUM('Bevestigd','Geannuleerd') NOT NULL DEFAULT 'Bevestigd',
+    isactief        TINYINT(1)      DEFAULT 1,
+    opmerking       TEXT,
+    datumaangemaakt DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd  DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX ix_afspraken_patientid (patientid),
     INDEX ix_afspraken_medewerkerid (medewerkerid),
     CONSTRAINT fk_afspraken_patient FOREIGN KEY (patientid) REFERENCES patient(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -146,21 +141,20 @@ CREATE TABLE afspraken (
 
 -- =========================================
 -- 8. BEHANDELING
--- =========================================
 CREATE TABLE behandeling (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    medewerkerid INT NOT NULL,
-    patientid INT NOT NULL,
-    datum DATE NOT NULL,
-    tijd TIME NOT NULL,
+    id              INT             PRIMARY KEY     AUTO_INCREMENT,
+    medewerkerid    INT             NOT NULL,
+    patientid       INT             NOT NULL,
+    datum           DATE            NOT NULL,
+    tijd            TIME            NOT NULL,
     behandelingtype ENUM('Controles','Vullingen','Gebitsreiniging','Orthodontie','Wortelkanaalbehandelingen') NOT NULL,
-    omschrijving TEXT,
-    kosten DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    status ENUM('Behandeld','Onbehandeld','Uitgesteld') NOT NULL DEFAULT 'Onbehandeld',
-    isactief TINYINT(1) DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    omschrijving    TEXT,
+    kosten          DECIMAL(10,2)   NOT NULL        DEFAULT 0.00,
+    status          ENUM('Behandeld','Onbehandeld','Uitgesteld') NOT NULL DEFAULT 'Onbehandeld',
+    isactief        TINYINT(1)      DEFAULT 1,
+    opmerking       TEXT,
+    datumaangemaakt DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd  DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX ix_behandeling_medewerkerid (medewerkerid),
     INDEX ix_behandeling_patientid (patientid),
     CONSTRAINT fk_behandeling_medewerker FOREIGN KEY (medewerkerid) REFERENCES medewerker(id) ON DELETE SET NULL ON UPDATE CASCADE,
@@ -175,19 +169,18 @@ ALTER TABLE behandeling ADD CONSTRAINT fk_behandeling_medewerker FOREIGN KEY (me
 
 -- =========================================
 -- 9. FACTUUR
--- =========================================
 CREATE TABLE factuur (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    patientid INT NOT NULL,
-    behandelingid INT NOT NULL,
-    nummer VARCHAR(50) NOT NULL,
-    datum DATE NOT NULL,
-    bedrag DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    status ENUM('Verzonden','Niet-Verzonden','Betaald','Onbetaald') NOT NULL DEFAULT 'Niet-Verzonden',
-    isactief TINYINT(1) DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id              INT             PRIMARY KEY     AUTO_INCREMENT,
+    patientid       INT             NOT NULL,
+    behandelingid   INT             NOT NULL,
+    nummer          VARCHAR(50)     NOT NULL,
+    datum           DATE            NOT NULL,
+    bedrag          DECIMAL(10,2)   NOT NULL        DEFAULT 0.00,
+    status          ENUM('Verzonden','Niet-Verzonden','Betaald','Onbetaald') NOT NULL DEFAULT 'Niet-Verzonden',
+    isactief        TINYINT(1)      DEFAULT 1,
+    opmerking       TEXT,
+    datumaangemaakt DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd  DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY ux_factuur_nummer (nummer),
     INDEX ix_factuur_patientid (patientid),
     INDEX ix_factuur_behandelingid (behandelingid),
@@ -197,17 +190,16 @@ CREATE TABLE factuur (
 
 -- =========================================
 -- 10. COMMUNICATIE
--- =========================================
 CREATE TABLE communicatie (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    patientid INT NOT NULL,
-    medewerkerid INT NOT NULL,
-    bericht TEXT NOT NULL,
-    verzonden_datum DATETIME NOT NULL,
-    isactief TINYINT(1) DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    id              INT             PRIMARY KEY     AUTO_INCREMENT,
+    patientid       INT             NOT NULL,
+    medewerkerid    INT             NOT NULL,
+    bericht         TEXT            NOT NULL,
+    verzonden_datum DATETIME        NOT NULL,
+    isactief        TINYINT(1)      DEFAULT 1,
+    opmerking       TEXT,
+    datumaangemaakt DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd  DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX ix_communicatie_patientid (patientid),
     INDEX ix_communicatie_medewerkerid (medewerkerid),
     CONSTRAINT fk_communicatie_patient FOREIGN KEY (patientid) REFERENCES patient(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -221,19 +213,17 @@ ALTER TABLE communicatie ADD CONSTRAINT fk_communicatie_medewerker FOREIGN KEY (
 
 -- =========================================
 -- 11. FEEDBACK
--- =========================================
 CREATE TABLE feedback (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    patientid INT NOT NULL,
-    beoordeling INT NOT NULL,
-    praktijkemail VARCHAR(255),
+    id              INT             PRIMARY KEY     AUTO_INCREMENT,
+    patientid       INT             NOT NULL,
+    beoordeling     INT             NOT NULL,
+    praktijkemail   VARCHAR(255),
     praktijktelefoon VARCHAR(20),
-    isactief TINYINT(1) DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    isactief        TINYINT(1)      DEFAULT 1,
+    opmerking       TEXT,
+    datumaangemaakt DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd  DATETIME        NOT NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CHECK (beoordeling BETWEEN 1 AND 5),
     INDEX ix_feedback_patientid (patientid),
     CONSTRAINT fk_feedback_patient FOREIGN KEY (patientid) REFERENCES patient(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
