@@ -10,10 +10,10 @@ use App\models\FactuurModel AS factuur;
 class FactuurController extends Controller
 {
     function index(){
-        $facturen = []; //factuur::GetAllFacturen();
+        $facturen = [];
         
         // Haal totalen op met stored procedure
-        $totalen = [];//factuur::GetTotaalFactuurBedrag();
+        $totalen = [];
         
         return view('medewerker.facturen.index', compact('facturen', 'totalen'));
     }
