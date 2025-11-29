@@ -22,7 +22,7 @@ class AdminController extends Controller
         $users = User::GetAllUsers($perPage, $offset);
 
         // Total count for pagination and display
-        $total = \Illuminate\Support\Facades\DB::table('users')->count();
+        $total = User::SP_CountAllUsers();
 
         // Build simple pagination data
         $pagination = [

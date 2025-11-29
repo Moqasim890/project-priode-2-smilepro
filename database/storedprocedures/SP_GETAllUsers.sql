@@ -1,5 +1,6 @@
 USE tandarts;
 DROP PROCEDURE IF EXISTS SP_GetAllUsers;
+DROP PROCEDURE IF EXISTS SP_CountAllUsers;
 DELIMITER $$
 
 CREATE PROCEDURE SP_GetAllUsers(
@@ -19,10 +20,17 @@ BEGIN
              usr.name, 
              usr.email, 
              usr.created_at
+    ORDER BY usr.id
     LIMIT limitVal OFFSET offsetVal;
+END$$
+
+CREATE PROCEDURE SP_CountAllUsers()
+BEGIN
+    SELECT COUNT(*) AS total_users FROM users;
 END $$
 
 DELIMITER ;
 
 CALL SP_GetAllUsers(30, 0);
 
+CALL SP_CountAllUsers();

@@ -14,7 +14,10 @@ class AdminUserModel extends Model
         try {
             return DB::select('CALL SP_GetAllUsers(?, ?)', [$limit, $offset]);
         } catch (\Throwable $e) {
-           return 'error';
+           return [];
         }
+    }
+    static public function SP_CountAllUsers(){
+        return DB::selectOne("CALL SP_CountAllUsers()")->total_users;   
     } 
 }

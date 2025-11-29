@@ -32,9 +32,10 @@
 			</div>
 			<div class="table-responsive">
 				@php
-					$first = $users[0] ?? null;
+					$first = !empty($users) && is_object($users[0]) ? $users[0] : null;
 					$columns = $first ? array_filter(array_keys(get_object_vars($first)), fn($c) => strtolower($c) !== 'id') : [];
 				@endphp
+				
 				<table class="table table-hover align-middle mb-0">
 					<thead class="table-light">
 						<tr>
@@ -71,7 +72,7 @@
 							</tr>
 						@empty
 							<tr>
-								<td colspan="{{ max(1, count($columns)+1) }}" class="text-center text-muted py-4">Geen gebruikers gevonden.</td>
+								<td colspan="{{ max(1, count($columns)+1) }}" class="text-center text-muted py-4">er zijn momenteel geen acounts om te weergeven.</td>
 							</tr>
 						@endforelse
 					</tbody>

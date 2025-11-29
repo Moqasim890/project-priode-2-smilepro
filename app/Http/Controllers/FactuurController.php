@@ -10,17 +10,11 @@ use App\models\FactuurModel AS factuur;
 class FactuurController extends Controller
 {
     function index(){
-        $facturen = factuur::GetAllFacturen();
+        $facturen = []; //factuur::GetAllFacturen();
         
         // Haal totalen op met stored procedure
-        $totalen = factuur::GetTotaalFactuurBedrag(null); // Alle facturen
-        $betaald = factuur::GetTotaalFactuurBedrag('Betaald');
-        $onbetaald = factuur::GetTotaalFactuurBedrag('Onbetaald');
+        $totalen = [];//factuur::GetTotaalFactuurBedrag();
         
-        $totalBedrag = $totalen->totaal_bedrag ?? 0;
-        $betaaldBedrag = $betaald->totaal_bedrag ?? 0;
-        $openstaandBedrag = $onbetaald->totaal_bedrag ?? 0;
-        
-        return view('medewerker.facturen.index', compact('facturen', 'totalBedrag', 'betaaldBedrag', 'openstaandBedrag'));
+        return view('medewerker.facturen.index', compact('facturen', 'totalen'));
     }
 }

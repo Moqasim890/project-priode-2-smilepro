@@ -6,6 +6,9 @@
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Facturen Beheren</h1>
+        <a href="{{ route('medewerker.dashboard') }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Terug naar Dashboard
+        </a>
     </div>
 
     @if(session('success'))
@@ -17,30 +20,29 @@
 
     <!-- Statistics Cards -->
     <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card text-white bg-primary">
-                <div class="card-body">
-                    <h5 class="card-title">Totaal Bedrag</h5>
-                    <p class="card-text fs-3">&euro; {{ number_format($totalBedrag, 2, ',', '.') }}</p>
+        @php
+            $statusConfig = [
+                'Verzonden' => ['label' => 'Verzonden', 'class' => 'bg-info'],
+                'Onbetaald' => ['label' => 'Onbetaald', 'class' => 'bg-danger'],
+                'Niet-Verzonden' => ['label' => 'Niet-Verzonden', 'class' => 'bg-warning'],
+                'Betaald' => ['label' => 'Betaald', 'class' => 'bg-success']
+            ];
+        @endphp
+        
+        @foreach($statusConfig as $status => $config)
+            <div class="col-md-3">
+                <div class="card text-white {{ $config['class'] }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $config['label'] }}</h5>
+                        @if(isset($totalen[$status]) && $totalen[$status] !== null)
+                            <p class="card-text fs-3">&euro; {{ number_format($totalen[$status], 2, ',', '.') }}</p>
+                        @else
+                            <p class="card-text fs-6 text-white-50">Geen data beschikbaar</p>
+                        @endif
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-success">
-                <div class="card-body">
-                    <h5 class="card-title">Betaald</h5>
-                    <p class="card-text fs-3">&euro; {{ number_format($betaaldBedrag, 2, ',', '.') }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-warning">
-                <div class="card-body">
-                    <h5 class="card-title">Openstaand</h5>
-                    <p class="card-text fs-3">&euro; {{ number_format($openstaandBedrag, 2, ',', '.') }}</p>
-                </div>
-            </div>
-        </div>
+        @endforeach
     </div>
 
     <!-- Facturen Table -->
@@ -74,6 +76,8 @@
                                         <span class="badge bg-danger">{{ $factuur->status }}</span>
                                     @elseif($factuur->status == 'Verzonden')
                                         <span class="badge bg-info">{{ $factuur->status }}</span>
+                                    @elseif($factuur->status == 'Niet-Verzonden')
+                                        <span class="badge bg-warning">{{ $factuur->status }}</span>
                                     @else
                                         <span class="badge bg-secondary">{{ $factuur->status }}</span>
                                     @endif
@@ -83,7 +87,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">Geen facturen gevonden</td>
+                                <td colspan="7" class="text-center bg-light text-muted py-4">Er zijn momenteel geen aangemaakte facturen</td>
                             </tr>
                         @endforelse
                     </tbody>

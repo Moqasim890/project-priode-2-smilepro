@@ -15,12 +15,19 @@ class FactuurModel extends Model
         }
     }
     
-    public static function GetTotaalFactuurBedrag(?string $status = null){
+    public static function GetTotaalFactuurBedrag(){
         try{
-            $results = DB::select('CALL SP_GetTotaalFactuurBedrag(?)', [$status]);
-            return !empty($results) ? $results[0] : (object)['aantal_facturen' => 0, 'totaal_bedrag' => 0];
+            $results = DB::select('CALL SP_GetAllTotaalbedragFacturen()');
+            
+            // Converteer array naar associatieve array met status als key
+            $totalen = [];
+            foreach ($results as $row) {
+                $totalen[$row->status] = $row->totaalbedrag;
+            }
+            
+            return $totalen;
         } catch (\Throwable $e) {
-           return (object)['aantal_facturen' => 0, 'totaal_bedrag' => 0];
+           return [];
         }
     }
 }

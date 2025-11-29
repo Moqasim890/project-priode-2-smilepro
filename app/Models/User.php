@@ -49,6 +49,20 @@ class User extends Authenticatable
     }
 
     /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::created(function (User $user) {
+            // Automatisch klant rol toewijzen aan nieuwe gebruikers
+            $klantRole = Role::where('name', 'klant')->first();
+            if ($klantRole) {
+                $user->roles()->attach($klantRole);
+            }
+        });
+    }
+
+    /**
      * The roles that belong to the user.
      */
     public function roles(): BelongsToMany

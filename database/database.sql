@@ -306,17 +306,55 @@ DELIMITER ;
 -- SEED DATA
 -- =========================================
 
--- Nep users voor Laravel authenticatie (alleen als ze nog niet bestaan)
+-- =========================================
+-- ROLES (van RoleSeeder)
+-- =========================================
+INSERT IGNORE INTO roles (name, created_at, updated_at) VALUES
+('admin', NOW(), NOW()),
+('medewerker', NOW(), NOW()),
+('klant', NOW(), NOW());
+
+-- =========================================
+-- USERS (van UserSeeder)
+-- =========================================
+-- Test users voor Laravel authenticatie
 INSERT IGNORE INTO users (name, email, password, created_at, updated_at) VALUES
+('Admin User', 'admin@smilepro.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
+('Medewerker Test', 'medewerker@smilepro.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
+('Klant Test', 'klant@smilepro.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
 ('Jan de Vries', 'jan.devries@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
 ('Sarah Bakker', 'sarah.bakker@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
 ('Mohammed Ali', 'mohammed.ali@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
 ('Emma Peters', 'emma.peters@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
 ('Lucas van Dam', 'lucas.vandam@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW());
 
--- Personen gelinkt aan users en standalone patienten
+-- =========================================
+-- ROLE_USER (koppel users aan roles)
+-- =========================================
+INSERT IGNORE INTO role_user (user_id, role_id)
+SELECT u.id, r.id
+FROM users u, roles r
+WHERE u.email = 'admin@smilepro.nl' AND r.name = 'admin'
+UNION ALL
+SELECT u.id, r.id
+FROM users u, roles r
+WHERE u.email = 'medewerker@smilepro.nl' AND r.name = 'medewerker'
+UNION ALL
+SELECT u.id, r.id
+FROM users u, roles r
+WHERE u.email = 'klant@smilepro.nl' AND r.name = 'klant'
+UNION ALL
+SELECT u.id, r.id
+FROM users u, roles r
+WHERE u.email LIKE '%@patient.nl' AND r.name = 'klant';
+
+-- Personen gelinkt aan test users en patienten users
 INSERT INTO persoon (gebruikerid, voornaam, tussenvoegsel, achternaam, geboortedatum, isactief) VALUES
--- Gelinkt aan users
+-- Test users van UserSeeder
+((SELECT id FROM users WHERE email = 'admin@smilepro.nl'), 'Admin', NULL, 'User', '1985-01-15', 1),
+((SELECT id FROM users WHERE email = 'medewerker@smilepro.nl'), 'Medewerker', NULL, 'Test', '1990-06-20', 1),
+((SELECT id FROM users WHERE email = 'klant@smilepro.nl'), 'Klant', NULL, 'Test', '1995-03-10', 1),
+-- Patient users
 ((SELECT id FROM users WHERE email = 'jan.devries@patient.nl'), 'Jan', 'de', 'Vries', '1985-03-15', 1),
 ((SELECT id FROM users WHERE email = 'sarah.bakker@patient.nl'), 'Sarah', NULL, 'Bakker', '1992-07-22', 1),
 ((SELECT id FROM users WHERE email = 'mohammed.ali@patient.nl'), 'Mohammed', NULL, 'Ali', '1978-11-08', 1),
@@ -326,9 +364,9 @@ INSERT INTO persoon (gebruikerid, voornaam, tussenvoegsel, achternaam, geboorted
 (NULL, 'Sophie', NULL, 'Jansen', '1990-02-14', 1),
 (NULL, 'David', 'van der', 'Berg', '1982-06-25', 1);
 
--- Patienten (gebruik de zojuist aangemaakte personen)
+-- Patienten (gebruik de zojuist aangemaakte personen, skip de eerste 3 test users)
 INSERT INTO patient (persoonid, nummer, medischdossier, isactief) 
-SELECT id, CONCAT('P', LPAD(id, 5, '0')), 
+SELECT id, CONCAT('P', LPAD(id - 3, 5, '0')), 
     CASE 
         WHEN voornaam = 'Jan' THEN 'Regelmatige controles, geen bijzonderheden'
         WHEN voornaam = 'Sarah' THEN 'Gevoelige tanden, regelmatig tandsteen'
@@ -341,7 +379,7 @@ SELECT id, CONCAT('P', LPAD(id, 5, '0')),
     END,
     1
 FROM persoon 
-WHERE id > 3  -- Skip eerste 3 personen van Laravel seeders
+WHERE voornaam NOT IN ('Admin', 'Medewerker', 'Klant')  -- Skip test users
 ORDER BY id;
 
 -- Contactgegevens voor patienten (gebruik patient IDs dynamisch)
@@ -376,7 +414,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.id > 3;
+WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant');
 
 -- Behandelingen (gebruik patient IDs dynamisch)
 INSERT INTO behandeling (medewerkerid, patientid, datum, tijd, behandelingtype, omschrijving, kosten, status, isactief)
@@ -392,7 +430,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.id > 3
+WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant')
 UNION ALL
 SELECT 
     NULL,
@@ -406,7 +444,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.id > 3 AND pt.id <= (SELECT MIN(id) + 4 FROM patient WHERE persoonid > 3)
+WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant') AND pt.id <= (SELECT MIN(id) + 4 FROM patient)
 UNION ALL
 SELECT 
     NULL,
@@ -420,7 +458,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.id > 3 AND pt.id <= (SELECT MIN(id) + 2 FROM patient WHERE persoonid > 3);
+WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant') AND pt.id <= (SELECT MIN(id) + 2 FROM patient);
 
 -- Facturen (gebruik patient IDs dynamisch)
 INSERT INTO factuur (patientid, nummer, datum, bedrag, status, isactief)
@@ -442,7 +480,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.id > 3;
+WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant');
 
 -- Factuur behandeling koppelingen (koppel eerste behandeling aan factuur)
 INSERT INTO factuur_behandeling (factuurid, behandelingid, isactief)
@@ -469,7 +507,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.id > 3;
+WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant');
 
 -- Communicatie (gebruik patient IDs dynamisch)
 INSERT INTO communicatie (patientid, medewerkerid, bericht, verzonden_datum, isactief)
@@ -481,7 +519,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.id > 3;
+WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant');
 
 -- Feedback (gebruik patient IDs dynamisch)
 INSERT INTO feedback (patientid, beoordeling, praktijkemail, praktijktelefoon, opmerking, isactief)
@@ -494,5 +532,5 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.id > 3;
+WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant');
 

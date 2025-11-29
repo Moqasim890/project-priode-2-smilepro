@@ -1,8 +1,9 @@
 USE tandarts;
 DROP PROCEDURE IF EXISTS SP_GetAllFacturen;
+DROP PROCEDURE IF EXISTS SP_GetAllTotaalbedragFacturen;
 DELIMITER $$
 
-CREATE PROCEDURE (
+CREATE PROCEDURE SP_GetAllFacturen(
     IN limitVal INT, 
     IN offsetVal INT
 )
@@ -26,6 +27,20 @@ BEGIN
     LIMIT limitVal OFFSET offsetVal;
 END$$
 
+
+CREATE PROCEDURE SP_GetAllTotaalbedragFacturen(
+
+)
+BEGIN
+    SELECT 
+        SUM(fct.bedrag) AS totaalbedrag
+        ,fct.status
+    FROM factuur AS fct
+    WHERE fct.isactief = 1
+    GROUP BY fct.status;
+END $$
 DELIMITER ;
 
 CALL `SP_GetAllFacturen`(10, 0);
+
+CALL `SP_GetAllTotaalbedragFacturen`();

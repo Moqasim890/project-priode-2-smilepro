@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <p class="card-text text-muted">Beheer alle facturen en betalingen</p>
-                    <a href="{{ route('admin.facturen.index') }}" class="btn btn-outline-success btn-sm">Beheren</a>
+                    <a href="{{ route('medewerker.factuur.index') }}" class="btn btn-outline-success btn-sm">Beheren</a>
                 </div>
             </div>
         </div>
