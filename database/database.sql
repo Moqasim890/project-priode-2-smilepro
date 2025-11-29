@@ -1,6 +1,10 @@
---- Zorg dat we schone lei hebben (drop in juiste volgorde)
+-- Active: 1764442526270@@127.0.0.1@3333@tandarts
+-- Zorg dat we schone lei hebben (drop in juiste volgorde)
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS feedback;
+
+DROP TABLE IF EXISTS factuur_behandeling;
+
 DROP TABLE IF EXISTS communicatie;
 DROP TABLE IF EXISTS factuur;
 DROP TABLE IF EXISTS behandeling;
@@ -10,32 +14,14 @@ DROP TABLE IF EXISTS beschikbaarheid;
 DROP TABLE IF EXISTS medewerker;
 DROP TABLE IF EXISTS patient;
 DROP TABLE IF EXISTS persoon;
-DROP TABLE IF EXISTS users;
 SET FOREIGN_KEY_CHECKS = 1;
-
--- =========================================
--- 0. USERS (Gebruiker)
--- =========================================
-CREATE TABLE users (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    gebruikersnaam VARCHAR(100) NOT NULL,
-    wachtwoord VARCHAR(255) NOT NULL, -- bcrypt/argon-hash
-    rolnaam VARCHAR(50) NOT NULL,
-    ingelogd DATETIME DEFAULT NULL,
-    uitgelogd DATETIME DEFAULT NULL,
-    isactief TINYINT(1) NOT NULL DEFAULT 1,
-    opmerking TEXT,
-    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY ux_users_gebruikersnaam (gebruikersnaam)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================================
 -- 1. PERSOON
 -- =========================================
 CREATE TABLE persoon (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    gebruikerid INT DEFAULT NULL,
+    gebruikerid BIGINT UNSIGNED DEFAULT NULL,
     voornaam VARCHAR(100) NOT NULL,
     tussenvoegsel VARCHAR(20),
     achternaam VARCHAR(100) NOT NULL,
@@ -130,7 +116,7 @@ CREATE TABLE contact (
 CREATE TABLE afspraken (
     id INT PRIMARY KEY AUTO_INCREMENT,
     patientid INT NOT NULL,
-    medewerkerid INT NOT NULL,
+    medewerkerid INT,
     datum DATE NOT NULL,
     tijd TIME NOT NULL,
     status ENUM('Bevestigd','Geannuleerd') NOT NULL DEFAULT 'Bevestigd',
@@ -141,8 +127,11 @@ CREATE TABLE afspraken (
     INDEX ix_afspraken_patientid (patientid),
     INDEX ix_afspraken_medewerkerid (medewerkerid),
     CONSTRAINT fk_afspraken_patient FOREIGN KEY (patientid) REFERENCES patient(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_afspraken_medewerker FOREIGN KEY (medewerkerid) REFERENCES medewerker(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_afspraken_medewerker FOREIGN KEY (medewerkerid) REFERENCES medewerker(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Pas medewerkerid nullable voor SET NULL
+ALTER TABLE afspraken MODIFY COLUMN medewerkerid INT DEFAULT NULL;
 
 -- =========================================
 -- 8. BEHANDELING
@@ -179,7 +168,6 @@ ALTER TABLE behandeling ADD CONSTRAINT fk_behandeling_medewerker FOREIGN KEY (me
 CREATE TABLE factuur (
     id INT PRIMARY KEY AUTO_INCREMENT,
     patientid INT NOT NULL,
-    behandelingid INT NOT NULL,
     nummer VARCHAR(50) NOT NULL,
     datum DATE NOT NULL,
     bedrag DECIMAL(10,2) NOT NULL DEFAULT 0.00,
@@ -190,9 +178,24 @@ CREATE TABLE factuur (
     datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY ux_factuur_nummer (nummer),
     INDEX ix_factuur_patientid (patientid),
-    INDEX ix_factuur_behandelingid (behandelingid),
-    CONSTRAINT fk_factuur_patient FOREIGN KEY (patientid) REFERENCES patient(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_factuur_behandeling FOREIGN KEY (behandelingid) REFERENCES behandeling(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fk_factuur_patient FOREIGN KEY (patientid) REFERENCES patient(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =========================================
+-- 9B. FACTUUR_BEHANDELING (Tussentabel)
+-- =========================================
+CREATE TABLE factuur_behandeling (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    factuurid INT NOT NULL,
+    behandelingid INT NOT NULL,
+    isactief TINYINT(1) DEFAULT 1,
+    datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    datumgewijzigd DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX ix_factuur_behandeling_factuurid (factuurid),
+    INDEX ix_factuur_behandeling_behandelingid (behandelingid),
+    UNIQUE KEY ux_factuur_behandeling (factuurid, behandelingid),
+    CONSTRAINT fk_factuur_behandeling_factuur FOREIGN KEY (factuurid) REFERENCES factuur(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_factuur_behandeling_behandeling FOREIGN KEY (behandelingid) REFERENCES behandeling(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- =========================================
@@ -236,4 +239,260 @@ CREATE TABLE feedback (
     INDEX ix_feedback_patientid (patientid),
     CONSTRAINT fk_feedback_patient FOREIGN KEY (patientid) REFERENCES patient(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- =========================================
+-- STORED PROCEDURES
+-- =========================================
+
+-- Procedure om totaal factuurbedrag te berekenen
+DROP PROCEDURE IF EXISTS SP_GetTotaalFactuurBedrag;
+
+DELIMITER $$
+
+CREATE PROCEDURE SP_GetTotaalFactuurBedrag(
+    IN p_status VARCHAR(50)
+)
+BEGIN
+    IF p_status IS NULL OR p_status = '' THEN
+        -- Alle actieve facturen
+        SELECT 
+            COUNT(*) as aantal_facturen,
+            COALESCE(SUM(bedrag), 0) as totaal_bedrag
+        FROM factuur
+        WHERE isactief = 1;
+    ELSE
+        -- Facturen met specifieke status
+        SELECT 
+            COUNT(*) as aantal_facturen,
+            COALESCE(SUM(bedrag), 0) as totaal_bedrag
+        FROM factuur
+        WHERE isactief = 1 AND status = p_status;
+    END IF;
+END$$
+
+DELIMITER ;
+
+-- Procedure om factuur overzicht per patient te krijgen
+DROP PROCEDURE IF EXISTS SP_GetFacturenPerPatient;
+
+DELIMITER $$
+
+CREATE PROCEDURE SP_GetFacturenPerPatient(
+    IN p_patientid INT
+)
+BEGIN
+    SELECT 
+        f.id,
+        f.nummer,
+        f.datum,
+        f.bedrag,
+        f.status,
+        GROUP_CONCAT(b.behandelingtype SEPARATOR ', ') as behandelingen,
+        CONCAT(p.voornaam, ' ', COALESCE(p.tussenvoegsel, ''), ' ', p.achternaam) as patient_naam
+    FROM factuur f
+    INNER JOIN patient pat ON f.patientid = pat.id
+    INNER JOIN persoon p ON pat.persoonid = p.id
+    LEFT JOIN factuur_behandeling fb ON f.id = fb.factuurid AND fb.isactief = 1
+    LEFT JOIN behandeling b ON fb.behandelingid = b.id
+    WHERE f.patientid = p_patientid 
+        AND f.isactief = 1
+    GROUP BY f.id, f.nummer, f.datum, f.bedrag, f.status, p.voornaam, p.tussenvoegsel, p.achternaam
+    ORDER BY f.datum DESC;
+END$$
+
+DELIMITER ;
+
+-- =========================================
+-- SEED DATA
+-- =========================================
+
+-- Nep users voor Laravel authenticatie (alleen als ze nog niet bestaan)
+INSERT IGNORE INTO users (name, email, password, created_at, updated_at) VALUES
+('Jan de Vries', 'jan.devries@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
+('Sarah Bakker', 'sarah.bakker@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
+('Mohammed Ali', 'mohammed.ali@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
+('Emma Peters', 'emma.peters@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
+('Lucas van Dam', 'lucas.vandam@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW());
+
+-- Personen gelinkt aan users en standalone patienten
+INSERT INTO persoon (gebruikerid, voornaam, tussenvoegsel, achternaam, geboortedatum, isactief) VALUES
+-- Gelinkt aan users
+((SELECT id FROM users WHERE email = 'jan.devries@patient.nl'), 'Jan', 'de', 'Vries', '1985-03-15', 1),
+((SELECT id FROM users WHERE email = 'sarah.bakker@patient.nl'), 'Sarah', NULL, 'Bakker', '1992-07-22', 1),
+((SELECT id FROM users WHERE email = 'mohammed.ali@patient.nl'), 'Mohammed', NULL, 'Ali', '1978-11-08', 1),
+((SELECT id FROM users WHERE email = 'emma.peters@patient.nl'), 'Emma', NULL, 'Peters', '1995-05-12', 1),
+((SELECT id FROM users WHERE email = 'lucas.vandam@patient.nl'), 'Lucas', 'van', 'Dam', '1988-09-30', 1),
+-- Standalone patienten zonder user account
+(NULL, 'Sophie', NULL, 'Jansen', '1990-02-14', 1),
+(NULL, 'David', 'van der', 'Berg', '1982-06-25', 1);
+
+-- Patienten (gebruik de zojuist aangemaakte personen)
+INSERT INTO patient (persoonid, nummer, medischdossier, isactief) 
+SELECT id, CONCAT('P', LPAD(id, 5, '0')), 
+    CASE 
+        WHEN voornaam = 'Jan' THEN 'Regelmatige controles, geen bijzonderheden'
+        WHEN voornaam = 'Sarah' THEN 'Gevoelige tanden, regelmatig tandsteen'
+        WHEN voornaam = 'Mohammed' THEN 'Orthodontie behandeling in 2023 afgerond'
+        WHEN voornaam = 'Emma' THEN 'Angstpatiënt, bij voorkeur 08:00 afspraken'
+        WHEN voornaam = 'Lucas' THEN 'Kaakgewricht klachten, onder controle'
+        WHEN voornaam = 'Sophie' THEN 'Zwangerschap, extra fluoride aanbevolen'
+        WHEN voornaam = 'David' THEN 'Diabetes type 2, tandvlees goed monitoren'
+        ELSE 'Standaard patiënt'
+    END,
+    1
+FROM persoon 
+WHERE id > 3  -- Skip eerste 3 personen van Laravel seeders
+ORDER BY id;
+
+-- Contactgegevens voor patienten (gebruik patient IDs dynamisch)
+INSERT INTO contact (patientid, straatnaam, huisnummer, postcode, plaats, mobiel, email, isactief)
+SELECT 
+    pt.id,
+    CASE 
+        WHEN ps.voornaam = 'Jan' THEN 'Hoofdstraat'
+        WHEN ps.voornaam = 'Sarah' THEN 'Kerkstraat'
+        WHEN ps.voornaam = 'Mohammed' THEN 'Plein'
+        WHEN ps.voornaam = 'Emma' THEN 'Laan'
+        WHEN ps.voornaam = 'Lucas' THEN 'Singel'
+        WHEN ps.voornaam = 'Sophie' THEN 'Dreef'
+        WHEN ps.voornaam = 'David' THEN 'Park'
+    END,
+    CASE 
+        WHEN ps.voornaam = 'Jan' THEN '123'
+        WHEN ps.voornaam = 'Sarah' THEN '45'
+        WHEN ps.voornaam = 'Mohammed' THEN '7'
+        WHEN ps.voornaam = 'Emma' THEN '89'
+        WHEN ps.voornaam = 'Lucas' THEN '12'
+        WHEN ps.voornaam = 'Sophie' THEN '34'
+        WHEN ps.voornaam = 'David' THEN '56'
+    END,
+    CONCAT(SUBSTRING('1234567890', pt.id, 4), 'AB'),
+    'Utrecht',
+    CONCAT('06', LPAD(pt.id * 12345678, 8, '0')),
+    CASE 
+        WHEN ps.gebruikerid IS NOT NULL THEN LOWER(CONCAT(ps.voornaam, '.', REPLACE(CONCAT(COALESCE(ps.tussenvoegsel, ''), ps.achternaam), ' ', ''), '@patient.nl'))
+        ELSE CONCAT(LOWER(ps.voornaam), '.', LOWER(SUBSTRING(ps.achternaam, 1, 1)), '@example.com')
+    END,
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.id > 3;
+
+-- Behandelingen (gebruik patient IDs dynamisch)
+INSERT INTO behandeling (medewerkerid, patientid, datum, tijd, behandelingtype, omschrijving, kosten, status, isactief)
+SELECT 
+    NULL,
+    pt.id,
+    DATE_SUB(CURDATE(), INTERVAL (pt.id * 7) DAY),
+    TIME(CONCAT(LPAD(8 + (pt.id % 9), 2, '0'), ':00:00')),
+    'Controles',
+    CONCAT('Controle voor ', ps.voornaam),
+    75.00,
+    'Behandeld',
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.id > 3
+UNION ALL
+SELECT 
+    NULL,
+    pt.id,
+    DATE_SUB(CURDATE(), INTERVAL (pt.id * 5) DAY),
+    TIME(CONCAT(LPAD(9 + (pt.id % 8), 2, '0'), ':30:00')),
+    CASE WHEN pt.id % 2 = 0 THEN 'Gebitsreiniging' ELSE 'Vullingen' END,
+    CASE WHEN pt.id % 2 = 0 THEN 'Tandsteen verwijderen' ELSE 'Vulling plaatsen' END,
+    CASE WHEN pt.id % 2 = 0 THEN 85.00 ELSE 150.00 END,
+    'Behandeld',
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.id > 3 AND pt.id <= (SELECT MIN(id) + 4 FROM patient WHERE persoonid > 3)
+UNION ALL
+SELECT 
+    NULL,
+    pt.id,
+    DATE_ADD(CURDATE(), INTERVAL (pt.id * 3) DAY),
+    TIME(CONCAT(LPAD(10 + (pt.id % 7), 2, '0'), ':00:00')),
+    'Gebitsreiniging',
+    'Geplande reiniging',
+    85.00,
+    'Onbehandeld',
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.id > 3 AND pt.id <= (SELECT MIN(id) + 2 FROM patient WHERE persoonid > 3);
+
+-- Facturen (gebruik patient IDs dynamisch)
+INSERT INTO factuur (patientid, nummer, datum, bedrag, status, isactief)
+SELECT 
+    pt.id,
+    CONCAT('F2024-', LPAD(pt.id, 4, '0')),
+    DATE_SUB(CURDATE(), INTERVAL (pt.id * 6) DAY),
+    CASE 
+        WHEN pt.id % 3 = 0 THEN 160.00
+        WHEN pt.id % 3 = 1 THEN 75.00
+        ELSE 150.00
+    END,
+    CASE 
+        WHEN pt.id % 4 = 0 THEN 'Betaald'
+        WHEN pt.id % 4 = 1 THEN 'Verzonden'
+        WHEN pt.id % 4 = 2 THEN 'Onbetaald'
+        ELSE 'Niet-Verzonden'
+    END,
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.id > 3;
+
+-- Factuur behandeling koppelingen (koppel eerste behandeling aan factuur)
+INSERT INTO factuur_behandeling (factuurid, behandelingid, isactief)
+SELECT 
+    f.id,
+    b.id,
+    1
+FROM factuur f
+INNER JOIN behandeling b ON f.patientid = b.patientid
+WHERE b.id = (
+    SELECT MIN(b2.id) 
+    FROM behandeling b2 
+    WHERE b2.patientid = f.patientid
+);
+
+-- Afspraken (gebruik patient IDs dynamisch)
+INSERT INTO afspraken (patientid, medewerkerid, datum, tijd, status, isactief)
+SELECT 
+    pt.id,
+    NULL,
+    DATE_ADD(CURDATE(), INTERVAL (pt.id * 10) DAY),
+    TIME(CONCAT(LPAD(9 + (pt.id % 8), 2, '0'), ':00:00')),
+    'Bevestigd',
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.id > 3;
+
+-- Communicatie (gebruik patient IDs dynamisch)
+INSERT INTO communicatie (patientid, medewerkerid, bericht, verzonden_datum, isactief)
+SELECT 
+    pt.id,
+    NULL,
+    CONCAT('Herinnering: uw afspraak is ingepland voor ', ps.voornaam),
+    DATE_SUB(NOW(), INTERVAL (pt.id * 2) DAY),
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.id > 3;
+
+-- Feedback (gebruik patient IDs dynamisch)
+INSERT INTO feedback (patientid, beoordeling, praktijkemail, praktijktelefoon, opmerking, isactief)
+SELECT 
+    pt.id,
+    4 + (pt.id % 2),
+    'info@smilepro.nl',
+    '030-1234567',
+    CONCAT('Goede ervaring met behandeling voor ', ps.voornaam),
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.id > 3;
 

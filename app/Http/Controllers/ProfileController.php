@@ -28,9 +28,31 @@ class ProfileController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            // Person fields optional but can be set
+            'voornaam' => ['nullable', 'string', 'max:100'],
+            'tussenvoegsel' => ['nullable', 'string', 'max:20'],
+            'achternaam' => ['nullable', 'string', 'max:100'],
+            'geboortedatum' => ['nullable', 'date'],
         ]);
 
-        $user->update($validated);
+        $user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+        ]);
+
+        // Update or create linked person row
+        if (array_key_exists('voornaam', $validated) || array_key_exists('achternaam', $validated) || array_key_exists('geboortedatum', $validated) || array_key_exists('tussenvoegsel', $validated)) {
+            $personData = [
+                'voornaam' => $validated['voornaam'] ?? null,
+                'tussenvoegsel' => $validated['tussenvoegsel'] ?? null,
+                'achternaam' => $validated['achternaam'] ?? null,
+                // If provided, use date; else keep existing or default
+                'geboortedatum' => $validated['geboortedatum'] ?? (optional($user->person)->geboortedatum ?? '2000-01-01'),
+                'isactief' => 1,
+            ];
+
+            $user->person()->updateOrCreate(['gebruikerid' => $user->id], $personData);
+        }
 
         return redirect()->route('profile')->with('success', 'Profiel succesvol bijgewerkt!');
     }

@@ -13,11 +13,20 @@ return new class extends Migration
     {
         Schema::create('role_user', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('role_id')->constrained()->onDelete('cascade');
+            // Use explicit unsigned big integers to match referenced primary keys
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('role_id');
             $table->timestamps();
-            
+
             $table->unique(['user_id', 'role_id']);
+
+            // Add foreign keys explicitly referencing tables and columns
+            $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onDelete('cascade');
+            $table->foreign('role_id')
+                ->references('id')->on('roles')
+                ->onDelete('cascade');
         });
     }
 

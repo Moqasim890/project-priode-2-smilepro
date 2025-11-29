@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Person;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -19,6 +20,14 @@ class UserSeeder extends Seeder
             'email' => 'admin@smilepro.nl',
             'password' => Hash::make('password'),
         ]);
+        Person::create([
+            'gebruikerid' => $admin->id,
+            'voornaam' => 'Admin',
+            'tussenvoegsel' => null,
+            'achternaam' => 'User',
+            'geboortedatum' => '1985-01-15',
+            'isactief' => 1,
+        ]);
         $admin->assignRole('admin');
 
         // Create medewerker user
@@ -27,6 +36,14 @@ class UserSeeder extends Seeder
             'email' => 'medewerker@smilepro.nl',
             'password' => Hash::make('password'),
         ]);
+        Person::create([
+            'gebruikerid' => $medewerker->id,
+            'voornaam' => 'Medewerker',
+            'tussenvoegsel' => null,
+            'achternaam' => 'Test',
+            'geboortedatum' => '1990-06-20',
+            'isactief' => 1,
+        ]);
         $medewerker->assignRole('medewerker');
 
         // Create klant user
@@ -34,6 +51,14 @@ class UserSeeder extends Seeder
             'name' => 'Klant Test',
             'email' => 'klant@smilepro.nl',
             'password' => Hash::make('password'),
+        ]);
+        Person::create([
+            'gebruikerid' => $klant->id,
+            'voornaam' => 'Klant',
+            'tussenvoegsel' => null,
+            'achternaam' => 'Test',
+            'geboortedatum' => '1995-03-10',
+            'isactief' => 1,
         ]);
         $klant->assignRole('klant');
 

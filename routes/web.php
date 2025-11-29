@@ -35,6 +35,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+
+    Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('admin.users.index');
 });
 
 // Medewerker routes (accessible by admin and medewerker)
@@ -42,4 +44,8 @@ Route::middleware(['auth', 'role:admin,medewerker'])->prefix('medewerker')->grou
     Route::get('/dashboard', function () {
         return view('medewerker.dashboard');
     })->name('medewerker.dashboard');
+
+    Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('medewerker.factuur.index');
 });
+
+

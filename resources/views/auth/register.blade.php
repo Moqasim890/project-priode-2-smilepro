@@ -18,8 +18,27 @@
                     <form method="POST" action="{{ route('register') }}" novalidate>
                         @csrf
                         <div class="mb-3">
-                            <label for="name" class="form-label">Naam</label>
+                            <label for="name" class="form-label">Naam (voor account)</label>
                             <input type="text" name="name" id="name" value="{{ old('name') }}" required autofocus class="form-control @error('name') is-invalid @enderror">
+                            <small class="text-muted">Gebruikersnaam voor login</small>
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-5">
+                                <label for="voornaam" class="form-label">Voornaam</label>
+                                <input type="text" name="voornaam" id="voornaam" value="{{ old('voornaam') }}" required class="form-control @error('voornaam') is-invalid @enderror">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
+                                <input type="text" name="tussenvoegsel" id="tussenvoegsel" value="{{ old('tussenvoegsel') }}" class="form-control @error('tussenvoegsel') is-invalid @enderror">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="achternaam" class="form-label">Achternaam</label>
+                                <input type="text" name="achternaam" id="achternaam" value="{{ old('achternaam') }}" required class="form-control @error('achternaam') is-invalid @enderror">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="geboortedatum" class="form-label">Geboortedatum</label>
+                            <input type="date" name="geboortedatum" id="geboortedatum" value="{{ old('geboortedatum') }}" required class="form-control @error('geboortedatum') is-invalid @enderror">
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">E-mailadres</label>

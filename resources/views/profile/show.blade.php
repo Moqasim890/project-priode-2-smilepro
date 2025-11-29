@@ -53,6 +53,28 @@
                             <p class="text-muted">{{ $user->created_at->format('d-m-Y') }}</p>
                         </div>
 
+                        <hr>
+                        <h6 class="fw-semibold mb-3">Persoonsgegevens</h6>
+                        @php $person = $user->person ?? null; @endphp
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="voornaam" class="form-label">Voornaam</label>
+                                <input type="text" name="voornaam" id="voornaam" value="{{ old('voornaam', $person->voornaam ?? '') }}" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="achternaam" class="form-label">Achternaam</label>
+                                <input type="text" name="achternaam" id="achternaam" value="{{ old('achternaam', $person->achternaam ?? '') }}" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="tussenvoegsel" class="form-label">Tussenvoegsel</label>
+                                <input type="text" name="tussenvoegsel" id="tussenvoegsel" value="{{ old('tussenvoegsel', $person->tussenvoegsel ?? '') }}" class="form-control">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="geboortedatum" class="form-label">Geboortedatum</label>
+                                <input type="date" name="geboortedatum" id="geboortedatum" value="{{ old('geboortedatum', isset($person->geboortedatum) ? \Carbon\Carbon::parse($person->geboortedatum)->format('Y-m-d') : '') }}" class="form-control">
+                            </div>
+                        </div>
+
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-check-circle me-1"></i>Opslaan

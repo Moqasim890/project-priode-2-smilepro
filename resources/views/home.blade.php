@@ -14,7 +14,7 @@
 			</div>
 			<div class="col-lg-6 text-center">
 				<div class="ratio ratio-16x9 rounded shadow overflow-hidden">
-					<img src="https://images.unsplash.com/photo-1609840114035-19664fca9871?auto=format&fit=crop&w=1200&q=60" alt="Tandheelkunde" class="w-100 h-100 object-fit-cover">
+					<img src="{{ asset('img/hero.png') }}" alt="Tandheelkunde SmilePro" class="w-100 h-100 object-fit-cover">
 				</div>
 			</div>
 		</div>
