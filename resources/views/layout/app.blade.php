@@ -17,7 +17,7 @@
     <nav class="navbar navbar-dark bg-dark sticky-top navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url('/') }}">
-                Smi
+                SmilePro
             </a>
 
             {{-- Toggler shows < lg; at lg+ the offcanvas turns into inline content --}} <button class="navbar-toggler"
@@ -36,6 +36,57 @@
                     </div>
 
                     <div class="offcanvas-body">
+                        <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+                            @auth
+                                {{-- Show role-based dashboard links --}}
+                                @if(auth()->user()->hasRole('admin'))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                                            <i class="bi bi-speedometer2 me-1"></i>Admin Dashboard
+                                        </a>
+                                    </li>
+                                @endif
+                                @if(auth()->user()->hasAnyRole(['admin', 'medewerker']))
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
+                                            <i class="bi bi-briefcase me-1"></i>Medewerker Dashboard
+                                        </a>
+                                    </li>
+                                @endif
+                                
+                                {{-- User dropdown --}}
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-person-circle me-1"></i>{{ auth()->user()->name }}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" href="{{ route('profile') }}">
+                                            <i class="bi bi-person me-1"></i>Profiel
+                                        </a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="bi bi-box-arrow-right me-1"></i>Uitloggen
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+                            @else
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('login') }}">
+                                        <i class="bi bi-box-arrow-in-right me-1"></i>Inloggen
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="btn btn-primary btn-sm" href="{{ route('register') }}">
+                                        <i class="bi bi-person-plus-fill me-1"></i>Registreren
+                                    </a>
+                                </li>
+                            @endauth
+                        </ul>
                     </div>
                 </div> {{-- /offcanvas --}}
         </div>
@@ -43,7 +94,7 @@
 
     {{-- MAIN CONTENT --}}
     <main class="flex-grow-1">
-        @yield('contend')
+        @yield('content')
     </main>
 
     {{-- FOOTER --}}

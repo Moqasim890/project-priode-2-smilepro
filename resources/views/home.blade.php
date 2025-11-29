@@ -1,6 +1,6 @@
 @extends('layout.app')
 
-@section('contend')
+@section('content')
 <section class="py-5 bg-light border-bottom">
 	<div class="container py-4">
 		<div class="row align-items-center">

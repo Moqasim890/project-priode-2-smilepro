@@ -1,45 +1,61 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Medewerker Dashboard - SmilePro</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body>
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <a href="{{ route('home') }}" class="text-xl font-bold">SmilePro</a>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-gray-700">{{ auth()->user()->name }} (Medewerker)</span>
-                    <form method="POST" action="{{ route('logout') }}" class="inline">
-                        @csrf
-                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                            Uitloggen
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </nav>
+@extends('layout.app')
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 class="text-3xl font-bold mb-6">Medewerker Dashboard</h1>
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-xl font-bold mb-2">Afspraken beheren</h3>
-                <p class="text-gray-600">Bekijk en beheer afspraken</p>
-            </div>
-            
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-xl font-bold mb-2">Klanten</h3>
-                <p class="text-gray-600">Bekijk klantinformatie</p>
+@section('content')
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold">
+            <i class="bi bi-briefcase me-2"></i>Medewerker Dashboard
+        </h1>
+        <span class="badge bg-info">Medewerker</span>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 rounded p-3 me-3">
+                            <i class="bi bi-calendar-check text-primary fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">Afspraken beheren</h5>
+                        </div>
+                    </div>
+                    <p class="card-text text-muted">Bekijk en beheer afspraken van klanten</p>
+                    <a href="#" class="btn btn-outline-primary btn-sm">Bekijken</a>
+                </div>
             </div>
         </div>
-    </main>
-</body>
-</html>
+        
+        <div class="col-md-6">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-success bg-opacity-10 rounded p-3 me-3">
+                            <i class="bi bi-people text-success fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">Klanten</h5>
+                        </div>
+                    </div>
+                    <p class="card-text text-muted">Bekijk klantinformatie en geschiedenis</p>
+                    <a href="#" class="btn btn-outline-success btn-sm">Bekijken</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0"><i class="bi bi-clock-history me-2"></i>Recente activiteit</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">Recente afspraken en acties worden hier weergegeven...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
