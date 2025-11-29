@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+class AdminUserModel extends Model
+{
+    static public function GetAllUsers(){
+        return DB::select('CALL GetAllUsers()');
+    } 
+}

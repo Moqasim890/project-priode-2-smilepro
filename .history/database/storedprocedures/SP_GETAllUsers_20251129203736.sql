@@ -1,0 +1,18 @@
+USE tandarts;
+DROP PROCEDURE IF EXISTS SP_GETAllUsers;
+DELIMITER $$
+
+CREATE PROCEDURE SP_GETAllUsers()
+BEGIN
+    SELECT usr.id, usr.name, usr.email, usr.created_at, GROUP_CONCAT(role.name SEPARATOR ', ') AS roles 
+    FROM role_user
+    JOIN users AS usr ON role_user.user_id = usr.id
+    JOIN roles AS role ON role_user.role_id = role.id
+    ORDER BY usr.name,
+             usr.email
+             GROUP BY usr.id, usr.name, usr.email, usr.created_at;
+END $$
+
+DELIMITER ;
+
+CALL SP_GETAllUsers();

@@ -1,0 +1,6 @@
+USE tandarts;
+
+DELIMITER $$
+
+CREATE PROCEDURE SP_GETAllUsers()
+BEGIN

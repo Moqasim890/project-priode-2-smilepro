@@ -1,0 +1,24 @@
+USE tandarts;
+DROP PROCEDURE IF EXISTS SP_GetAllFacturen;
+DELIMITER $$
+
+CREATE PROCEDURE SP_GetAllFacturen(
+    IN limitVal INT, 
+    IN offsetVal INT
+)
+BEGIN
+    SELECT 
+        ftc.nummer
+        ,ftc.datum
+        ,ftc.bedrag
+        ,ftc.status
+        ,CONCAT_WS(' ', prs.voornaam, prs.tussenvoegsel, prs.achternaam) AS naam
+        ,bhdl.behandelingtype
+        ,bhdl.tijd
+        ,dhdl.datum
+    FROM facturen AS fct
+    JOIN factuur_behandeling AS fct_bhdl ON fct_bhdl.factuurid = fct.id
+    JOIN behandeling AS dhdl ON dhdl.id = 
+    LIMIT limitVal OFFSET offsetVal;
+END $$
+DELIMITER ;
