@@ -1,3 +1,10 @@
+{{--
+    Profiel View
+    Doel: Gebruikersprofiel met persoonlijke gegevens en wachtwoord wijziging
+    Toegang: Alle ingelogde gebruikers
+    Features: Profielinformatie bewerken, persoonsgegevens, wachtwoord wijzigen
+    Data verwacht: $user (huidige ingelogde gebruiker met person relatie)
+--}}
 @extends('layout.app')
 
 @section('content')

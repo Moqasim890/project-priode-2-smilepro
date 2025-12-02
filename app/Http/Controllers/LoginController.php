@@ -33,7 +33,9 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'De inloggegevens zijn onjuist.',
+            'email' => 'email/wachtwoord is incorrect.',
+            
+
         ])->onlyInput('email');
     }
 }

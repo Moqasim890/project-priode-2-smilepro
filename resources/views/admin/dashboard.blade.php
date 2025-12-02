@@ -1,12 +1,19 @@
 @extends('layout.app')
 
+{{--
+    Admin Dashboard View
+    Doel: Hoofdpagina voor praktijkmanagement met snelkoppelingen naar beheertools
+    Toegang: Alleen Praktijkmanagement rol
+    Functies: Navigatie naar gebruikersbeheer, facturen, statistieken
+--}}
+
 @section('content')
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 fw-bold">
-            <i class="bi bi-speedometer2 me-2"></i>Admin Dashboard
+            <i class="bi bi-speedometer2 me-2"></i>Management Dashboard
         </h1>
-        <span class="badge bg-primary">Administrator</span>
+        <span class="badge bg-primary">Praktijkmanagement</span>
     </div>
     
     <div class="row g-4">

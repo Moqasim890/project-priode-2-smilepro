@@ -2,7 +2,7 @@
     Facturen Overzicht Pagina
     
     Doel: Toon alle facturen met statistieken en filtering opties
-    Toegang: Medewerkers en admins
+    Toegang: Praktijkmanagement, Tandarts, Mondhygiënist, Assistent rollen
     
     Data verwacht:
     - $facturen: Array van factuur objecten uit SP_GetAllFacturen

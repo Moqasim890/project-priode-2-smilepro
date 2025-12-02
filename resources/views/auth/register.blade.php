@@ -1,3 +1,10 @@
+{{--
+    Registratie View
+    Doel: Registratieformulier voor nieuwe patiënten
+    Toegang: Alleen gasten (niet-ingelogde gebruikers)
+    Features: Account aanmaken, persoonsgegevens, automatische Patiënt rol toewijzing
+    Note: Nieuwe gebruikers krijgen automatisch de "Patiënt" rol via User::booted() event
+--}}
 @extends('layout.app')
 @section('content')
 <div class="container py-5">

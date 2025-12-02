@@ -1,3 +1,12 @@
+{{--
+    Master Layout Template
+    Doel: Hoofdlayout voor alle paginas met navigatie, footer en modals
+    Features:
+        - Responsive navbar met offcanvas op mobiel
+        - Rol-gebaseerde navigatie (Praktijkmanagement, Tandarts, Mondhygiënist, Assistent)
+        - Success/error modals voor gebruikersfeedback
+        - Bootstrap 5.3.3 styling
+--}}
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -39,14 +48,14 @@
                         <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
                             @auth
                                 {{-- Show role-based dashboard links --}}
-                                @if(auth()->user()->hasRole('admin'))
+                                @if(auth()->user()->hasRole('Praktijkmanagement'))
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ route('admin.dashboard') }}">
-                                            <i class="bi bi-speedometer2 me-1"></i>Admin Dashboard
+                                            <i class="bi bi-speedometer2 me-1"></i>Management Dashboard
                                         </a>
                                     </li>
                                 @endif
-                                @if(auth()->user()->hasAnyRole(['admin', 'medewerker']))
+                                @if(auth()->user()->hasAnyRole(['Praktijkmanagement', 'Tandarts', 'Mondhygiënist', 'Assistent']))
                                     <li class="nav-item">
                                         <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
                                             <i class="bi bi-briefcase me-1"></i>Medewerker Dashboard

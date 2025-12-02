@@ -1,3 +1,9 @@
+{{--
+    Login View
+    Doel: Inlogformulier voor bestaande gebruikers
+    Toegang: Alleen gasten (niet-ingelogde gebruikers)
+    Features: Email/wachtwoord velden, "onthoud mij" optie, link naar registratie
+--}}
 @extends('layout.app')
 @section('content')
 <div class="container py-5">
