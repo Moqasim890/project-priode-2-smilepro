@@ -1,9 +1,26 @@
+{{--
+    Facturen Overzicht Pagina
+    
+    Doel: Toon alle facturen met statistieken en filtering opties
+    Toegang: Medewerkers en admins
+    
+    Data verwacht:
+    - $facturen: Array van factuur objecten uit SP_GetAllFacturen
+    - $totalen: Associatieve array met totaalbedragen per status
+    
+    Features:
+    - Statistiek cards per status (Verzonden, Onbetaald, Niet-Verzonden, Betaald)
+    - Facturen tabel met patiënt info, behandelingen, bedrag en status
+    - Badge kleuren per status voor visuele herkenbaarheid
+--}}
+
 @extends('layout.app')
 
 @section('title', 'Facturen Beheren')
 
 @section('content')
 <div class="container my-5">
+    {{-- Header met titel en terug knop --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Facturen Beheren</h1>
         <a href="{{ route('medewerker.dashboard') }}" class="btn btn-secondary">
@@ -11,6 +28,7 @@
         </a>
     </div>
 
+    {{-- Success melding na acties (bijv. factuur aangemaakt) --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             {{ session('success') }}
@@ -18,9 +36,10 @@
         </div>
     @endif
 
-    <!-- Statistics Cards -->
+    {{-- Statistiek Cards - Toon totaalbedragen per status --}}
     <div class="row mb-4">
         @php
+            // Configuratie voor status cards met labels en kleuren
             $statusConfig = [
                 'Verzonden' => ['label' => 'Verzonden', 'class' => 'bg-info'],
                 'Onbetaald' => ['label' => 'Onbetaald', 'class' => 'bg-danger'],
@@ -29,11 +48,13 @@
             ];
         @endphp
         
+        {{-- Loop door elke status en toon card met totaalbedrag --}}
         @foreach($statusConfig as $status => $config)
             <div class="col-md-3">
                 <div class="card text-white {{ $config['class'] }}">
                     <div class="card-body">
                         <h5 class="card-title">{{ $config['label'] }}</h5>
+                        {{-- Toon bedrag als data beschikbaar is, anders foutmelding --}}
                         @if(isset($totalen[$status]) && $totalen[$status] !== null)
                             <p class="card-text fs-3">&euro; {{ number_format($totalen[$status], 2, ',', '.') }}</p>
                         @else
@@ -45,7 +66,7 @@
         @endforeach
     </div>
 
-    <!-- Facturen Table -->
+    {{-- Facturen Tabel --}}
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
@@ -62,13 +83,25 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{-- Loop door alle facturen en toon rij per factuur --}}
                         @forelse($facturen as $factuur)
                             <tr>
+                                {{-- Factuurnummer in vet --}}
                                 <td><strong>{{ $factuur->nummer }}</strong></td>
+                                
+                                {{-- Datum in Nederlands formaat (dd-mm-yyyy) --}}
                                 <td>{{ \Carbon\Carbon::parse($factuur->datum)->format('d-m-Y') }}</td>
+                                
+                                {{-- Patiënt naam uit SP via CONCAT_WS --}}
                                 <td>{{ $factuur->naam }}</td>
+                                
+                                {{-- Behandelingen uit SP via GROUP_CONCAT, of fallback tekst --}}
                                 <td>{{ $factuur->behandelingen ?? 'Geen behandeling' }}</td>
+                                
+                                {{-- Bedrag geformatteerd met euro teken --}}
                                 <td>&euro; {{ number_format($factuur->bedrag, 2, ',', '.') }}</td>
+                                
+                                {{-- Status badge met kleur per status type --}}
                                 <td>
                                     @if($factuur->status == 'Betaald')
                                         <span class="badge bg-success">{{ $factuur->status }}</span>
@@ -79,13 +112,17 @@
                                     @elseif($factuur->status == 'Niet-Verzonden')
                                         <span class="badge bg-warning">{{ $factuur->status }}</span>
                                     @else
+                                        {{-- Fallback voor onbekende status --}}
                                         <span class="badge bg-secondary">{{ $factuur->status }}</span>
                                     @endif
                                 </td>
+                                
+                                {{-- Acties kolom - voorbereid voor toekomstige functionaliteit (bekijken, bewerken, etc.) --}}
                                 <td>
                                 </td>
                             </tr>
                         @empty
+                            {{-- Toon deze rij als er geen facturen zijn --}}
                             <tr>
                                 <td colspan="7" class="text-center bg-light text-muted py-4">Er zijn momenteel geen aangemaakte facturen</td>
                             </tr>
