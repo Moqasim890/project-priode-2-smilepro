@@ -30,14 +30,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/profiel/wachtwoord', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 
-// Admin routes
-Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
+// // Admin routes
+// Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('admin.users.index');
-});
+// });
 
 // Medewerker routes (accessible by admin and medewerker)
 Route::middleware(['auth', 'role:admin,medewerker'])->prefix('medewerker')->group(function () {

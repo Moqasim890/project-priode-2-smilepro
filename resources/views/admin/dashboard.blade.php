@@ -43,6 +43,23 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-success bg-opacity-10 rounded p-3 me-3">
+                            <i class="bi bi-receipt-cutoff text-success fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">Patiënten beheren</h5>
+                        </div>
+                    </div>
+                    <p class="card-text text-muted">Beheer alle Patiënten en betalingen</p>
+                    <a href="{{ route('medewerker.factuur.index') }}" class="btn btn-outline-success btn-sm">Beheren</a>
+                </div>
+            </div>
+        </div>
         
     </div>
     
