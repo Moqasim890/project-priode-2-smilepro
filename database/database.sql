@@ -301,23 +301,27 @@ DELIMITER ;
 -- ROLES (van RoleSeeder)
 -- =========================================
 INSERT IGNORE INTO roles (name, created_at, updated_at) VALUES
-('admin', NOW(), NOW()),
-('medewerker', NOW(), NOW()),
-('klant', NOW(), NOW());
+('Praktijkmanagement', NOW(), NOW()),
+('Tandarts', NOW(), NOW()),
+('Mondhygiënist', NOW(), NOW()),
+('Assistent', NOW(), NOW()),
+('Patiënt', NOW(), NOW());
 
 -- =========================================
 -- USERS (van UserSeeder)
 -- =========================================
--- Test users voor Laravel authenticatie
+-- Test users voor Laravel authenticatie (wachtwoord: password)
 INSERT IGNORE INTO users (name, email, password, created_at, updated_at) VALUES
-('Admin User', 'admin@smilepro.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
-('Medewerker Test', 'medewerker@smilepro.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
-('Klant Test', 'klant@smilepro.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
-('Jan de Vries', 'jan.devries@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
-('Sarah Bakker', 'sarah.bakker@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
-('Mohammed Ali', 'mohammed.ali@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
-('Emma Peters', 'emma.peters@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW()),
-('Lucas van Dam', 'lucas.vandam@patient.nl', '$2y$12$LQv3c1yqBWVHxkd0LHAkCOYz6TuBkNWJJnqsGl0b9c0Z9oK9i.9K.', NOW(), NOW());
+('Praktijkmanager', 'manager@smilepro.nl', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NOW(), NOW()),
+('Tandarts Test', 'tandarts@smilepro.nl', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NOW(), NOW()),
+('Mondhygiënist Test', 'hygienist@smilepro.nl', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NOW(), NOW()),
+('Assistent Test', 'assistent@smilepro.nl', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NOW(), NOW()),
+('Patiënt Test', 'patient.test@smilepro.nl', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NOW(), NOW()),
+('Jan de Vries', 'jan.devries@patient.nl', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NOW(), NOW()),
+('Sarah Bakker', 'sarah.bakker@patient.nl', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NOW(), NOW()),
+('Mohammed Ali', 'mohammed.ali@patient.nl', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NOW(), NOW()),
+('Emma Peters', 'emma.peters@patient.nl', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NOW(), NOW()),
+('Lucas van Dam', 'lucas.vandam@patient.nl', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', NOW(), NOW());
 
 -- =========================================
 -- ROLE_USER (koppel users aan roles)
@@ -325,26 +329,36 @@ INSERT IGNORE INTO users (name, email, password, created_at, updated_at) VALUES
 INSERT IGNORE INTO role_user (user_id, role_id)
 SELECT u.id, r.id
 FROM users u, roles r
-WHERE u.email = 'admin@smilepro.nl' AND r.name = 'admin'
+WHERE u.email = 'manager@smilepro.nl' AND r.name = 'Praktijkmanagement'
 UNION ALL
 SELECT u.id, r.id
 FROM users u, roles r
-WHERE u.email = 'medewerker@smilepro.nl' AND r.name = 'medewerker'
+WHERE u.email = 'tandarts@smilepro.nl' AND r.name = 'Tandarts'
 UNION ALL
 SELECT u.id, r.id
 FROM users u, roles r
-WHERE u.email = 'klant@smilepro.nl' AND r.name = 'klant'
+WHERE u.email = 'hygienist@smilepro.nl' AND r.name = 'Mondhygiënist'
 UNION ALL
 SELECT u.id, r.id
 FROM users u, roles r
-WHERE u.email LIKE '%@patient.nl' AND r.name = 'klant';
+WHERE u.email = 'assistent@smilepro.nl' AND r.name = 'Assistent'
+UNION ALL
+SELECT u.id, r.id
+FROM users u, roles r
+WHERE u.email = 'patient.test@smilepro.nl' AND r.name = 'Patiënt'
+UNION ALL
+SELECT u.id, r.id
+FROM users u, roles r
+WHERE u.email LIKE '%@patient.nl' AND r.name = 'Patiënt';
 
 -- Personen gelinkt aan test users en patienten users
 INSERT INTO persoon (gebruikerid, voornaam, tussenvoegsel, achternaam, geboortedatum, isactief) VALUES
 -- Test users van UserSeeder
-((SELECT id FROM users WHERE email = 'admin@smilepro.nl'), 'Admin', NULL, 'User', '1985-01-15', 1),
-((SELECT id FROM users WHERE email = 'medewerker@smilepro.nl'), 'Medewerker', NULL, 'Test', '1990-06-20', 1),
-((SELECT id FROM users WHERE email = 'klant@smilepro.nl'), 'Klant', NULL, 'Test', '1995-03-10', 1),
+((SELECT id FROM users WHERE email = 'manager@smilepro.nl'), 'Praktijkmanager', NULL, 'SmilePro', '1980-01-15', 1),
+((SELECT id FROM users WHERE email = 'tandarts@smilepro.nl'), 'Dr. Tandarts', NULL, 'Jansen', '1985-06-20', 1),
+((SELECT id FROM users WHERE email = 'hygienist@smilepro.nl'), 'Mondhygiënist', NULL, 'Bakker', '1990-03-10', 1),
+((SELECT id FROM users WHERE email = 'assistent@smilepro.nl'), 'Assistent', NULL, 'Peters', '1995-08-25', 1),
+((SELECT id FROM users WHERE email = 'patient.test@smilepro.nl'), 'Patiënt', NULL, 'Test', '1992-11-12', 1),
 -- Patient users
 ((SELECT id FROM users WHERE email = 'jan.devries@patient.nl'), 'Jan', 'de', 'Vries', '1985-03-15', 1),
 ((SELECT id FROM users WHERE email = 'sarah.bakker@patient.nl'), 'Sarah', NULL, 'Bakker', '1992-07-22', 1),
@@ -355,9 +369,9 @@ INSERT INTO persoon (gebruikerid, voornaam, tussenvoegsel, achternaam, geboorted
 (NULL, 'Sophie', NULL, 'Jansen', '1990-02-14', 1),
 (NULL, 'David', 'van der', 'Berg', '1982-06-25', 1);
 
--- Patienten (gebruik de zojuist aangemaakte personen, skip de eerste 3 test users)
+-- Patienten (gebruik de zojuist aangemaakte personen, skip de eerste 5 test users)
 INSERT INTO patient (persoonid, nummer, medischdossier, isactief) 
-SELECT id, CONCAT('P', LPAD(id - 3, 5, '0')), 
+SELECT id, CONCAT('P', LPAD(id - 5, 5, '0')), 
     CASE 
         WHEN voornaam = 'Jan' THEN 'Regelmatige controles, geen bijzonderheden'
         WHEN voornaam = 'Sarah' THEN 'Gevoelige tanden, regelmatig tandsteen'
@@ -370,7 +384,7 @@ SELECT id, CONCAT('P', LPAD(id - 3, 5, '0')),
     END,
     1
 FROM persoon 
-WHERE voornaam NOT IN ('Admin', 'Medewerker', 'Klant')  -- Skip test users
+WHERE voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt')  -- Skip test users
 ORDER BY id;
 
 -- Contactgegevens voor patienten (gebruik patient IDs dynamisch)
@@ -405,7 +419,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant');
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt');
 
 -- Behandelingen (gebruik patient IDs dynamisch)
 INSERT INTO behandeling (medewerkerid, patientid, datum, tijd, behandelingtype, omschrijving, kosten, status, isactief)
@@ -421,7 +435,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant')
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt')
 UNION ALL
 SELECT 
     NULL,
@@ -435,7 +449,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant') AND pt.id <= (SELECT MIN(id) + 4 FROM patient)
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt') AND pt.id <= (SELECT MIN(id) + 4 FROM patient)
 UNION ALL
 SELECT 
     NULL,
@@ -449,7 +463,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant') AND pt.id <= (SELECT MIN(id) + 2 FROM patient);
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt') AND pt.id <= (SELECT MIN(id) + 2 FROM patient);
 
 -- Facturen (gebruik patient IDs dynamisch)
 INSERT INTO factuur (patientid, nummer, datum, bedrag, status, isactief)
@@ -471,7 +485,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant');
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt');
 
 -- Factuur behandeling koppelingen (koppel eerste behandeling aan factuur)
 INSERT INTO factuur_behandeling (factuurid, behandelingid, isactief)
@@ -498,7 +512,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant');
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt');
 
 -- Communicatie (gebruik patient IDs dynamisch)
 INSERT INTO communicatie (patientid, medewerkerid, bericht, verzonden_datum, isactief)
@@ -510,7 +524,7 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant');
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt');
 
 -- Feedback (gebruik patient IDs dynamisch)
 INSERT INTO feedback (patientid, beoordeling, praktijkemail, praktijktelefoon, opmerking, isactief)
@@ -523,5 +537,5 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.voornaam NOT IN ('Admin', 'Medewerker', 'Klant');
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt');
 

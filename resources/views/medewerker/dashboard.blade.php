@@ -1,12 +1,32 @@
 @extends('layout.app')
 
+{{--
+    Medewerker Dashboard View
+    Doel: Hoofdpagina voor medewerkers met toegang tot behandel- en factuurtools
+    Toegang: Praktijkmanagement, Tandarts, Mondhygiënist, Assistent rollen
+    Functies: Navigatie naar facturenbeheer en andere medewerker taken
+--}}
+
 @section('content')
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 fw-bold">
             <i class="bi bi-briefcase me-2"></i>Medewerker Dashboard
         </h1>
-        <span class="badge bg-info">Medewerker</span>
+        {{-- Dynamisch badge op basis van eerste rol --}}
+        <span class="badge bg-info">
+            @if(auth()->user()->hasRole('Praktijkmanagement'))
+                Praktijkmanagement
+            @elseif(auth()->user()->hasRole('Tandarts'))
+                Tandarts
+            @elseif(auth()->user()->hasRole('Mondhygiënist'))
+                Mondhygiënist
+            @elseif(auth()->user()->hasRole('Assistent'))
+                Assistent
+            @else
+                Medewerker
+            @endif
+        </span>
     </div>
     
     <div class="row g-4">

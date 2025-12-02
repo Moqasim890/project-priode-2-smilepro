@@ -1,3 +1,12 @@
+{{--
+    Gebruikersbeheer View
+    Doel: Overzicht van alle gebruikers in het systeem met paginering
+    Toegang: Alleen Praktijkmanagement rol
+    Data verwacht:
+        - $users: Array van user objecten uit SP_GetAllUsers
+        - $pagination: Array met current_page, last_page, total, per_page
+    Features: Dynamische tabel, paginering, per-page selectie, acties (bekijken/bewerken)
+--}}
 @extends('layout.app')
 
 @section('content')

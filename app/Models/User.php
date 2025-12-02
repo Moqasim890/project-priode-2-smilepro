@@ -54,10 +54,10 @@ class User extends Authenticatable
     protected static function booted(): void
     {
         static::created(function (User $user) {
-            // Automatisch klant rol toewijzen aan nieuwe gebruikers
-            $klantRole = Role::where('name', 'klant')->first();
-            if ($klantRole) {
-                $user->roles()->attach($klantRole);
+            // Automatisch Patiënt rol toewijzen aan nieuwe gebruikers
+            $patientRole = Role::where('name', 'Patiënt')->first();
+            if ($patientRole) {
+                $user->roles()->attach($patientRole);
             }
         });
     }

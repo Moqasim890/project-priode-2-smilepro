@@ -1,3 +1,9 @@
+{{--
+    Home/Landing Page View
+    Doel: Publieke welkomstpagina voor SmilePro tandartspraktijk
+    Toegang: Iedereen (geen authenticatie vereist)
+    Features: Hero sectie, diensten overzicht, contact call-to-action
+--}}
 @extends('layout.app')
 
 @section('content')
