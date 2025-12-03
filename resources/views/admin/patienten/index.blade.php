@@ -30,7 +30,10 @@
 				<table class="table table-hover align-middle mb-0">
 					<thead class="table-light">
 						<tr>
-							<th scope="col"></th>
+							<th scope="col">Gebruikersnaam</th>
+							<th scope="col">Email</th>
+							<th scope="col">Nummer</th>
+							<th scope="col">Medischdossier</th>
 							<th scope="col" class="text-end">Acties</th>
 						</tr>
 					</thead>
