@@ -85,6 +85,7 @@ class AdminUserModel extends Model
             // Return 0 bij fout zodat paginering niet breekt
             return 0;
         }
+<<<<<<< HEAD
     }
     
     /**
@@ -110,5 +111,7 @@ class AdminUserModel extends Model
             // Return lege array bij fout zodat de applicatie blijft werken
             return [];
         }
+=======
+>>>>>>> e32ff75 (Add Overzicht Medewerkers feature: views, controller, seeder, happy/unhappy flow)
     } 
 }

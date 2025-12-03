@@ -50,6 +50,7 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
 
         <div class="col-md-4">
             <div class="card h-100 shadow-sm">
@@ -67,6 +68,8 @@
                 </div>
             </div>
         </div>
+=======
+>>>>>>> e32ff75 (Add Overzicht Medewerkers feature: views, controller, seeder, happy/unhappy flow)
         
     </div>
     

@@ -58,6 +58,7 @@ class AdminController extends Controller
         // Stuur data naar view
         return view('admin.users.index', compact('users', 'pagination'));
     }
+<<<<<<< HEAD
 
     /**
      * Toon patienten overzicht.
@@ -73,4 +74,6 @@ class AdminController extends Controller
             'patienten' => $patienten
         ]);
     }
+=======
+>>>>>>> e32ff75 (Add Overzicht Medewerkers feature: views, controller, seeder, happy/unhappy flow)
 }
