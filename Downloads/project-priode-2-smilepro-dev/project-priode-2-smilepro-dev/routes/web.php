@@ -1,13 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AfsprakenController;
+use App\Http\Controllers\Managementdashboard;
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [Managementdashboard::class, 'index'])->name('dashboard');
 
-
-
-Route::get('/afspraken', function () {
-    return view('afspraken.index');
-})->name('afspraken.index');
+Route::get('/afspraken', [AfsprakenController::class, 'index'])->name('afspraken.index');

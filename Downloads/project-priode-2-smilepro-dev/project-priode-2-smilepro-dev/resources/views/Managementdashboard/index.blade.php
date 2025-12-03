@@ -1,4 +1,3 @@
-
 @extends('layout.app')
 
 @section('content')
@@ -16,14 +15,11 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <p class="text-muted mb-1 small">Totaal Afspraken</p>
-                            <h3 class="mb-0">127</h3>
+                            <h3 class="mb-0">{{ $stats['totaal'] }}</h3>
                         </div>
                         <div class="bg-primary bg-opacity-10 rounded-circle p-3">
                             <i class="bi bi-calendar-check text-primary fs-4"></i>
                         </div>
-                    </div>
-                    <div class="mt-2">
-                        <small class="text-success"><i class="bi bi-arrow-up"></i> 12% vs vorige maand</small>
                     </div>
                 </div>
             </div>
@@ -35,14 +31,11 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <p class="text-muted mb-1 small">Vandaag</p>
-                            <h3 class="mb-0">8</h3>
+                            <h3 class="mb-0">{{ $stats['vandaag'] }}</h3>
                         </div>
                         <div class="bg-success bg-opacity-10 rounded-circle p-3">
                             <i class="bi bi-calendar-event text-success fs-4"></i>
                         </div>
-                    </div>
-                    <div class="mt-2">
-                        <small class="text-muted">5 bevestigd, 3 wachtend</small>
                     </div>
                 </div>
             </div>
@@ -54,14 +47,11 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <p class="text-muted mb-1 small">Deze Week</p>
-                            <h3 class="mb-0">34</h3>
+                            <h3 class="mb-0">{{ $stats['dezeWeek'] }}</h3>
                         </div>
                         <div class="bg-info bg-opacity-10 rounded-circle p-3">
                             <i class="bi bi-calendar-week text-info fs-4"></i>
                         </div>
-                    </div>
-                    <div class="mt-2">
-                        <small class="text-muted">Ma-Vr geplanned</small>
                     </div>
                 </div>
             </div>
@@ -73,24 +63,20 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
                             <p class="text-muted mb-1 small">Geannuleerd</p>
-                            <h3 class="mb-0">5</h3>
+                            <h3 class="mb-0">{{ $stats['geannuleerd'] }}</h3>
                         </div>
                         <div class="bg-danger bg-opacity-10 rounded-circle p-3">
                             <i class="bi bi-calendar-x text-danger fs-4"></i>
                         </div>
-                    </div>
-                    <div class="mt-2">
-                        <small class="text-danger"><i class="bi bi-arrow-down"></i> 3% vs vorige maand</small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Charts and Tables --}}
+    {{-- Afspraken per dag --}}
     <div class="row g-3">
-        {{-- Afspraken per dag (laatste 7 dagen) --}}
-        <div class="col-12 col-lg-8">
+        <div class="col-12">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-white border-0 pt-3">
                     <h5 class="mb-0">Afspraken per Dag (Laatste 7 Dagen)</h5>
@@ -101,121 +87,26 @@
                             <thead class="table-light">
                                 <tr>
                                     <th>Datum</th>
-                                    <th>Dag</th>
                                     <th class="text-center">Bevestigd</th>
                                     <th class="text-center">Geannuleerd</th>
                                     <th class="text-center">Totaal</th>
-                                    <th>Trend</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @forelse($lastSevenDays as $day)
                                 <tr>
-                                    <td>02-12-2025</td>
-                                    <td><span class="badge bg-primary">Maandag</span></td>
-                                    <td class="text-center">12</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center"><strong>13</strong></td>
-                                    <td><i class="bi bi-arrow-up text-success"></i></td>
+                                    <td>{{ \Carbon\Carbon::parse($day->dag)->format('d-m-Y') }}</td>
+                                    <td class="text-center">{{ $day->bevestigd }}</td>
+                                    <td class="text-center">{{ $day->geannuleerd }}</td>
+                                    <td class="text-center"><strong>{{ $day->totaal }}</strong></td>
                                 </tr>
+                                @empty
                                 <tr>
-                                    <td>01-12-2025</td>
-                                    <td><span class="badge bg-secondary">Zondag</span></td>
-                                    <td class="text-center">0</td>
-                                    <td class="text-center">0</td>
-                                    <td class="text-center"><strong>0</strong></td>
-                                    <td><i class="bi bi-dash text-muted"></i></td>
+                                    <td colspan="4" class="text-center text-muted">Geen data beschikbaar</td>
                                 </tr>
-                                <tr>
-                                    <td>30-11-2025</td>
-                                    <td><span class="badge bg-secondary">Zaterdag</span></td>
-                                    <td class="text-center">3</td>
-                                    <td class="text-center">0</td>
-                                    <td class="text-center"><strong>3</strong></td>
-                                    <td><i class="bi bi-arrow-down text-warning"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>29-11-2025</td>
-                                    <td><span class="badge bg-primary">Vrijdag</span></td>
-                                    <td class="text-center">15</td>
-                                    <td class="text-center">2</td>
-                                    <td class="text-center"><strong>17</strong></td>
-                                    <td><i class="bi bi-arrow-up text-success"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>28-11-2025</td>
-                                    <td><span class="badge bg-primary">Donderdag</span></td>
-                                    <td class="text-center">14</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center"><strong>15</strong></td>
-                                    <td><i class="bi bi-arrow-up text-success"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>27-11-2025</td>
-                                    <td><span class="badge bg-primary">Woensdag</span></td>
-                                    <td class="text-center">11</td>
-                                    <td class="text-center">0</td>
-                                    <td class="text-center"><strong>11</strong></td>
-                                    <td><i class="bi bi-dash text-muted"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>26-11-2025</td>
-                                    <td><span class="badge bg-primary">Dinsdag</span></td>
-                                    <td class="text-center">13</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-center"><strong>14</strong></td>
-                                    <td><i class="bi bi-arrow-up text-success"></i></td>
-                                </tr>
+                                @endforelse
                             </tbody>
                         </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Top Medewerkers --}}
-        <div class="col-12 col-lg-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white border-0 pt-3">
-                    <h5 class="mb-0">Top Medewerkers</h5>
-                </div>
-                <div class="card-body">
-                    <div class="list-group list-group-flush">
-                        <div class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-0">Dr. Piet Pietersen</h6>
-                                    <small class="text-muted">Tandarts</small>
-                                </div>
-                                <span class="badge bg-primary rounded-pill">47</span>
-                            </div>
-                        </div>
-                        <div class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-0">Dr. Anna Bakker</h6>
-                                    <small class="text-muted">Tandarts</small>
-                                </div>
-                                <span class="badge bg-primary rounded-pill">42</span>
-                            </div>
-                        </div>
-                        <div class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-0">Lisa de Jong</h6>
-                                    <small class="text-muted">Mondhygiënist</small>
-                                </div>
-                                <span class="badge bg-primary rounded-pill">28</span>
-                            </div>
-                        </div>
-                        <div class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-0">Mark Hendriks</h6>
-                                    <small class="text-muted">Assistent</small>
-                                </div>
-                                <span class="badge bg-primary rounded-pill">10</span>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

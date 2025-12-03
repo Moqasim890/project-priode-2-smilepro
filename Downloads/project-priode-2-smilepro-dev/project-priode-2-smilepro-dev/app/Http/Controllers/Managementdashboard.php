@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Afspraken;
 use Illuminate\Http\Request;
 
 class Managementdashboard extends Controller
@@ -11,7 +12,13 @@ class Managementdashboard extends Controller
      */
     public function index()
     {
-        //
+        // Haal statistieken op via Model method
+        $stats = Afspraken::getStats();
+        
+        // Haal laatste 7 dagen data op via Model method
+        $lastSevenDays = Afspraken::getLastSevenDays();
+        
+        return view('Managementdashboard.index', compact('stats', 'lastSevenDays'));
     }
 
     /**
