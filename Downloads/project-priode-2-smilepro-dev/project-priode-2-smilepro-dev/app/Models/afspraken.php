@@ -56,26 +56,10 @@ class Afspraken extends Model
     // Static method voor overzicht met joins (DB QUERY IN MODEL)
     public static function getAllWithNames()
     {
-        return DB::table('afspraken')
-            ->join('patient', 'afspraken.patientid', '=', 'patient.id')
-            ->join('persoon as p_patient', 'patient.persoonid', '=', 'p_patient.id')
-            ->join('medewerker', 'afspraken.medewerkerid', '=', 'medewerker.id')
-            ->join('persoon as p_medewerker', 'medewerker.persoonid', '=', 'p_medewerker.id')
-            ->select([
-                'afspraken.id',
-                'afspraken.datum',
-                'afspraken.tijd',
-                'afspraken.status',
-                'afspraken.isactief',
-                'afspraken.opmerking',
-                'afspraken.patientid',
-                'afspraken.medewerkerid',
-                DB::raw("CONCAT(p_patient.voornaam, ' ', COALESCE(p_patient.tussenvoegsel, ''), ' ', p_patient.achternaam) as patient_naam"),
-                DB::raw("CONCAT(p_medewerker.voornaam, ' ', COALESCE(p_medewerker.tussenvoegsel, ''), ' ', p_medewerker.achternaam) as medewerker_naam"),
-            ])
-            ->where('afspraken.isactief', 1)
-            ->orderBy('afspraken.datum', 'desc')
-            ->orderBy('afspraken.tijd', 'desc')
+        // Sorteer van oud naar nieuw (ASC in plaats van DESC)
+        return self::where('isactief', 1)
+            ->orderBy('datum', 'asc')
+            ->orderBy('tijd', 'asc')
             ->paginate(15);
     }
 

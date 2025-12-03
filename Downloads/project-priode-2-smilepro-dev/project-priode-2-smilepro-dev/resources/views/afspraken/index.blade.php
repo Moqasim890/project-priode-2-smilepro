@@ -10,185 +10,160 @@
   </div>
 
   {{-- Desktop table (large screens) --}}
-  <div class="d-none d-lg-block">{{-- calss d-none d-lg-block--}}
-    <div class="table-responsive">
-      <table class="table table-striped table-hover align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Patiënt</th>
-            <th scope="col">Medewerker</th>
-            <th scope="col">Datum</th>
-            <th scope="col">Tijd</th>
-            <th scope="col">Status</th>
-            <th scope="col">Actief</th>
-            <th scope="col">Acties</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-          pe="row">1</th>
-            <td>Jan Jansen</td>
-            <td>Dr. Piet Pietersen</td>
-            <td>28-11-2025</td>
-            <td>09:30</td>
-            <td><span class="badge bg-success">Bevestigd</span></td>
-            <td><i class="bi bi-check-circle-fill text-success"></i></td>
-            <td>
-              <a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-              <a href="#" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Maria de Vries</td>
-            <td>Dr. Anna Bakker</td>
-            <td>29-11-2025</td>
-            <td>14:00</td>
-            <td><span class="badge bg-success">Bevestigd</span></td>
-            <td><i class="bi bi-check-circle-fill text-success"></i></td>
-            <td>
-              <a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-              <a href="#" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Kees Hendriks</td>
-            <td>Dr. Piet Pietersen</td>
-            <td>30-11-2025</td>
-            <td>10:15</td>
-            <td><span class="badge bg-danger">Geannuleerd</span></td>
-            <td><i class="bi bi-x-circle-fill text-danger"></i></td>
-            <td>
-              <a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-              <a href="#" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">4</th>
-            <td>Sophie Vermeer</td>
-            <td>Dr. Anna Bakker</td>
-            <td>01-12-2025</td>
-            <td>11:45</td>
-            <td><span class="badge bg-success">Bevestigd</span></td>
-            <td><i class="bi bi-check-circle-fill text-success"></i></td>
-            <td>
-              <a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-              <a href="#" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">5</th>
-            <td>Tom van Dijk</td>
-            <td>Dr. Piet Pietersen</td>
-            <td>02-12-2025</td>
-            <td>16:30</td>
-            <td><span class="badge bg-success">Bevestigd</span></td>
-            <td><i class="bi bi-check-circle-fill text-success"></i></td>
-            <td>
-              <a href="#" class="btn btn-sm btn-outline-primary"><i class="bi bi-eye"></i></a>
-              <a href="#" class="btn btn-sm btn-outline-warning"><i class="bi bi-pencil"></i></a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="d-none d-lg-block">
+    @if($afspraken->count() > 0)
+      <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Patiënt</th>
+              <th scope="col">Medewerker</th>
+              <th scope="col">Datum</th>
+              <th scope="col">Tijd</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actief</th>
+              <th scope="col">Acties</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($afspraken as $afspraak)
+            <tr>
+              <th scope="row">{{ $afspraak->id }}</th>
+              <td>
+                @php
+                  $patientNamen = [
+                    1 => 'Jan Jansen',
+                    2 => 'Maria de Vries',
+                    3 => 'Kees Hendriks',
+                    4 => 'Sophie Vermeer',
+                    5 => 'Tom van Dijk',
+                  ];
+                @endphp
+                {{ $patientNamen[$afspraak->patientid] ?? 'Patient #' . $afspraak->patientid }}
+              </td>
+              <td>
+                @php
+                  $medewerkerNamen = [
+                    1 => 'Dr. Piet Pietersen',
+                    2 => 'Dr. Anna Bakker',
+                  ];
+                @endphp
+                {{ $medewerkerNamen[$afspraak->medewerkerid] ?? 'Medewerker #' . $afspraak->medewerkerid }}
+              </td>
+              <td>{{ \Carbon\Carbon::parse($afspraak->datum)->format('d-m-Y') }}</td>
+              <td>{{ \Carbon\Carbon::parse($afspraak->tijd)->format('H:i') }}</td>
+              <td>
+                <span class="badge {{ $afspraak->status === 'Bevestigd' ? 'bg-success' : 'bg-danger' }}">
+                  {{ $afspraak->status }}
+                </span>
+              </td>
+              <td>
+                @if($afspraak->isactief)
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                @else
+                  <i class="bi bi-x-circle-fill text-danger"></i>
+                @endif
+              </td>
+              <td>
+                <div class="btn-group btn-group-sm" role="group">
+                  <a href="{{ url('/afspraken/' . $afspraak->id) }}" class="btn btn-outline-primary">
+                    <i class="bi bi-eye"></i>
+                  </a>
+                  <a href="{{ url('/afspraken/' . $afspraak->id . '/edit') }}" class="btn btn-outline-warning">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+            @endforeach
+          </tbody>
+        </table>
+      </div>
+
+      {{-- Pagination --}}
+      <div class="mt-3">
+        {{ $afspraken->links() }}
+      </div>
+    @else
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        Er zijn geen afspraken gevonden.
+      </div>
+    @endif
   </div>
 
   {{-- Mobile cards (small/medium screens) --}}
   <div class="d-lg-none">
-    <div class="row g-3">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <h5 class="card-title mb-0">#1 Jan Jansen</h5>
-              <span class="badge bg-success">Bevestigd</span>
-            </div>
-            <p class="card-text mb-1"><strong>Medewerker:</strong> Dr. Piet Pietersen</p>
-            <p class="card-text mb-1"><strong>Datum:</strong> 28-11-2025 om 09:30</p>
-            <p class="card-text mb-3"><strong>Actief:</strong> <i class="bi bi-check-circle-fill text-success"></i></p>
-            <div class="d-flex gap-2">
-              <a href="#" class="btn btn-sm btn-outline-primary flex-fill"><i class="bi bi-eye"></i> Bekijk</a>
-              <a href="#" class="btn btn-sm btn-outline-warning flex-fill"><i class="bi bi-pencil"></i> Bewerk</a>
+    @if($afspraken->count() > 0)
+      <div class="row g-3">
+        @foreach($afspraken as $afspraak)
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <h5 class="card-title mb-0">
+                  #{{ $afspraak->id }}
+                  @php
+                    $patientNamen = [
+                      1 => 'Jan Jansen',
+                      2 => 'Maria de Vries',
+                      3 => 'Kees Hendriks',
+                      4 => 'Sophie Vermeer',
+                      5 => 'Tom van Dijk',
+                    ];
+                  @endphp
+                  {{ $patientNamen[$afspraak->patientid] ?? 'Patient #' . $afspraak->patientid }}
+                </h5>
+                <span class="badge {{ $afspraak->status === 'Bevestigd' ? 'bg-success' : 'bg-danger' }}">
+                  {{ $afspraak->status }}
+                </span>
+              </div>
+              <p class="card-text mb-1">
+                <strong>Medewerker:</strong>
+                @php
+                  $medewerkerNamen = [
+                    1 => 'Dr. Piet Pietersen',
+                    2 => 'Dr. Anna Bakker',
+                  ];
+                @endphp
+                {{ $medewerkerNamen[$afspraak->medewerkerid] ?? 'Medewerker #' . $afspraak->medewerkerid }}
+              </p>
+              <p class="card-text mb-1">
+                <strong>Datum:</strong> {{ \Carbon\Carbon::parse($afspraak->datum)->format('d-m-Y') }} om {{ \Carbon\Carbon::parse($afspraak->tijd)->format('H:i') }}
+              </p>
+              <p class="card-text mb-3">
+                <strong>Actief:</strong>
+                @if($afspraak->isactief)
+                  <i class="bi bi-check-circle-fill text-success"></i>
+                @else
+                  <i class="bi bi-x-circle-fill text-danger"></i>
+                @endif
+              </p>
+              <div class="d-flex gap-2">
+                <a href="{{ url('/afspraken/' . $afspraak->id) }}" class="btn btn-sm btn-outline-primary flex-fill">
+                  <i class="bi bi-eye"></i> Bekijk
+                </a>
+                <a href="{{ url('/afspraken/' . $afspraak->id . '/edit') }}" class="btn btn-sm btn-outline-warning flex-fill">
+                  <i class="bi bi-pencil"></i> Bewerk
+                </a>
+              </div>
             </div>
           </div>
         </div>
+        @endforeach
       </div>
 
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <h5 class="card-title mb-0">#2 Maria de Vries</h5>
-              <span class="badge bg-success">Bevestigd</span>
-            </div>
-            <p class="card-text mb-1"><strong>Medewerker:</strong> Dr. Anna Bakker</p>
-            <p class="card-text mb-1"><strong>Datum:</strong> 29-11-2025 om 14:00</p>
-            <p class="card-text mb-3"><strong>Actief:</strong> <i class="bi bi-check-circle-fill text-success"></i></p>
-            <div class="d-flex gap-2">
-              <a href="#" class="btn btn-sm btn-outline-primary flex-fill"><i class="bi bi-eye"></i> Bekijk</a>
-              <a href="#" class="btn btn-sm btn-outline-warning flex-fill"><i class="bi bi-pencil"></i> Bewerk</a>
-            </div>
-          </div>
-        </div>
+      {{-- Pagination --}}
+      <div class="mt-3">
+        {{ $afspraken->links() }}
       </div>
-
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <h5 class="card-title mb-0">#3 Kees Hendriks</h5>
-              <span class="badge bg-danger">Geannuleerd</span>
-            </div>
-            <p class="card-text mb-1"><strong>Medewerker:</strong> Dr. Piet Pietersen</p>
-            <p class="card-text mb-1"><strong>Datum:</strong> 30-11-2025 om 10:15</p>
-            <p class="card-text mb-3"><strong>Actief:</strong> <i class="bi bi-x-circle-fill text-danger"></i></p>
-            <div class="d-flex gap-2">
-              <a href="#" class="btn btn-sm btn-outline-primary flex-fill"><i class="bi bi-eye"></i> Bekijk</a>
-              <a href="#" class="btn btn-sm btn-outline-warning flex-fill"><i class="bi bi-pencil"></i> Bewerk</a>
-            </div>
-          </div>
-        </div>
+    @else
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        Er zijn geen afspraken gevonden.
       </div>
-
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <h5 class="card-title mb-0">#4 Sophie Vermeer</h5>
-              <span class="badge bg-success">Bevestigd</span>
-            </div>
-            <p class="card-text mb-1"><strong>Medewerker:</strong> Dr. Anna Bakker</p>
-            <p class="card-text mb-1"><strong>Datum:</strong> 01-12-2025 om 11:45</p>
-            <p class="card-text mb-3"><strong>Actief:</strong> <i class="bi bi-check-circle-fill text-success"></i></p>
-            <div class="d-flex gap-2">
-              <a href="#" class="btn btn-sm btn-outline-primary flex-fill"><i class="bi bi-eye"></i> Bekijk</a>
-              <a href="#" class="btn btn-sm btn-outline-warning flex-fill"><i class="bi bi-pencil"></i> Bewerk</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-12">
-        <div class="card">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-start mb-2">
-              <h5 class="card-title mb-0">#5 Tom van Dijk</h5>
-              <span class="badge bg-success">Bevestigd</span>
-            </div>
-            <p class="card-text mb-1"><strong>Medewerker:</strong> Dr. Piet Pietersen</p>
-            <p class="card-text mb-1"><strong>Datum:</strong> 02-12-2025 om 16:30</p>
-            <p class="card-text mb-3"><strong>Actief:</strong> <i class="bi bi-check-circle-fill text-success"></i></p>
-            <div class="d-flex gap-2">
-              <a href="#" class="btn btn-sm btn-outline-primary flex-fill"><i class="bi bi-eye"></i> Bekijk</a>
-              <a href="#" class="btn btn-sm btn-outline-warning flex-fill"><i class="bi bi-pencil"></i> Bewerk</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    @endif
   </div>
 </div>
 @endsection

@@ -10,6 +10,7 @@ class AfsprakenController extends Controller
     /**
      * Display a listing of the resource.
      */
+
     public function index()
     {
         // Roep model method aan - DB query zit in model

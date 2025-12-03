@@ -27,17 +27,16 @@ return new class extends Migration
             $table->index('patientid', 'ix_afspraken_patientid');
             $table->index('medewerkerid', 'ix_afspraken_medewerkerid');
             
-            // Foreign keys
-            $table->foreign('patientid', 'fk_afspraken_patient')
-                  ->references('id')->on('patient')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade');
+            // Foreign keys - COMMENT OUT totdat patient/medewerker tabellen bestaan
+            // $table->foreign('patientid', 'fk_afspraken_patient')
+            //       ->references('id')->on('patient')
+            //       ->onDelete('cascade')
+            //       ->onUpdate('cascade');
                   
-
-            $table->foreign('medewerkerid', 'fk_afspraken_medewerker')
-                  ->references('id')->on('medewerker')
-                  ->onDelete('cascade')
-                  ->onUpdate('cascade');
+            // $table->foreign('medewerkerid', 'fk_afspraken_medewerker')
+            //       ->references('id')->on('medewerker')
+            //       ->onDelete('cascade')
+            //       ->onUpdate('cascade');
         });
     }
 
