@@ -10,7 +10,7 @@
 
     {{-- Statistics Cards --}}
     <div class="row g-3 mb-4">
-        <div class="col-12 col-sm-6 col-xl-3">
+        <div class="col-12 col-sm-6 col-xl-3">{{-- col-12  --}}
             <div class="card border-0 shadow-sm h-100 hover-lift">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-3">
