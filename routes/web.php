@@ -47,5 +47,3 @@ Route::middleware(['auth', 'role:Praktijkmanagement,Tandarts,Mondhygiënist,Assi
 
     Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('medewerker.factuur.index');
 });
-
-
