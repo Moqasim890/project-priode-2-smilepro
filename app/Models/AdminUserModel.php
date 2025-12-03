@@ -85,5 +85,29 @@ class AdminUserModel extends Model
             // Return 0 bij fout zodat paginering niet breekt
             return 0;
         }
+    }
+    
+    /**
+     * Haal alle patienten
+     */
+    static public function SP_GetAllPatienten(){
+        try {
+            // Log de aanroep
+            Log::info('SP_GetAllPatienten uitgevoerd');
+            
+            // Voer stored procedure uit
+            $result = DB::select("CALL SP_GetAllPatienten()");
+            
+            // Log succesvol resultaat
+            Log::info('SP_GetAllPatienten succesvol');
+            
+            return $result;
+        } catch (\Throwable $e) {
+            // Log dat er een fout was
+            Log::error('SP_GetAllPatienten mislukt');
+            
+            // Return lege array bij fout zodat de applicatie blijft werken
+            return [];
+        }
     } 
 }

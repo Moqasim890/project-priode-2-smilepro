@@ -58,4 +58,19 @@ class AdminController extends Controller
         // Stuur data naar view
         return view('admin.users.index', compact('users', 'pagination'));
     }
+
+    /**
+     * Toon patienten overzicht.
+     * 
+     * Haalt patienten op via stored procedure.
+     */
+    function patienten()
+    {
+        $patienten = User::SP_GetAllPatienten();
+        // dd($patienten);
+        // Stuur data naar view
+        return view('admin.patienten.index', [
+            'patienten' => $patienten
+        ]);
+    }
 }
