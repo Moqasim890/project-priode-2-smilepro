@@ -110,4 +110,28 @@ class AdminUserModel extends Model
             return [];
         }
     } 
+
+    /**
+     * Haal alle Berichten
+     */
+    static public function SP_GetAllBerichten(){
+        try {
+            // Log de aanroep
+            Log::info('SP_GetAllBerichten uitgevoerd');
+            
+            // Voer stored procedure uit
+            $result = DB::select("CALL SP_GetAllBerichten()");
+            
+            // Log succesvol resultaat
+            Log::info('SP_GetAllBerichten succesvol');
+            
+            return $result;
+        } catch (\Throwable $e) {
+            // Log dat er een fout was
+            Log::error('SP_GetAllBerichten mislukt');
+            
+            // Return lege array bij fout zodat de applicatie blijft werken
+            return [];
+        }
+    } 
 }

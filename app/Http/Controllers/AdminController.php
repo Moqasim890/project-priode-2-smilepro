@@ -73,4 +73,20 @@ class AdminController extends Controller
             'patienten' => $patienten
         ]);
     }
+
+
+    /**
+     * Toon berichten overzicht.
+     * 
+     * Haalt berichten op via stored procedure.
+     */
+    function berichten()
+    {
+        $berichten = User::SP_GetAllberichten();
+        // dd($berichten);
+        // Stuur data naar view
+        return view('admin.berichten.index', [
+            'berichten' => $berichten
+        ]);
+    }
 }
