@@ -105,6 +105,7 @@ class AdminUserModel extends Model
         } catch (\Throwable $e) {
             // Log dat er een fout was
             Log::error('SP_GetAllPatienten mislukt');
+
             
             // Return lege array bij fout zodat de applicatie blijft werken
             return [];
