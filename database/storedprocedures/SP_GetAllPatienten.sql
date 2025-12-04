@@ -14,7 +14,7 @@ BEGIN
     JOIN users AS u ON p.persoonid = u.id
     JOIN role_user AS ru ON ru.user_id = u.id
     JOIN roles AS r ON r.id = ru.role_id
-    WHERE r.name = 'klant';
+    WHERE r.name = 'patient';
 END $$
 
 DELIMITER ;

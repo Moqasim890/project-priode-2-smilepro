@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('admin.users.index');
     Route::get('/patienten', [App\Http\Controllers\AdminController::class, 'patienten'])->name('admin.patienten.index');
+    Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('medewerker.factuur.index');
 // });
 
 // Medewerker routes (accessible by Praktijkmanagement, Tandarts, Mondhygiënist, and Assistent)
