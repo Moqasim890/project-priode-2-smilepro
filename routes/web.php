@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Praktijkmanagement routes
-Route::middleware(['auth', 'role:Praktijkmanagement'])->prefix('management')->group(function () {
+// Route::middleware(['auth', 'role:Praktijkmanagement'])->prefix('management')->group(function () {
     Route::get('/management/shboard', [Managementdashboard::class, 'index'])->name('adminn.dashboard');
 
         Route::get('/dashboard', function () { 
@@ -46,7 +46,7 @@ Route::middleware(['auth', 'role:Praktijkmanagement'])->prefix('management')->gr
     
     // Afspraken routes
     Route::get('/afspraken', [AfsprakenController::class, 'index'])->name('afspraken.index');
-});
+// });
 
 // Medewerker routes (accessible by Praktijkmanagement, Tandarts, Mondhygiënist, and Assistent)
 Route::middleware(['auth', 'role:Praktijkmanagement,Tandarts,Mondhygiënist,Assistent'])->prefix('medewerker')->group(function () {

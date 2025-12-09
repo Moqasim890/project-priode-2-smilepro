@@ -76,7 +76,15 @@
 				</div>
 			</div>
 		@empty
-			leeg
+			<div class="row d-flex flex-row mt-3 border border-black rounded p-2 h-100 mw-75">
+				<div class="col-12 text-center">
+					<h3>
+						<strong>
+							Er zijn nog geen patiënten geregistreerd.
+						</strong>
+					</h3>
+				</div>
+			</div>
 		@endforelse
 	</div>
 </div>
