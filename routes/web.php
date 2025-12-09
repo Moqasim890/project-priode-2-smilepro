@@ -4,6 +4,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\AfsprakenController;
+use App\Http\Controllers\Managementdashboard;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -31,20 +33,28 @@ Route::middleware('auth')->group(function () {
 });
 
 // Praktijkmanagement routes
-// Route::middleware(['auth', 'role:Praktijkmanagement'])->prefix('management')->group(function () {
-    Route::get('/dashboard', function () { 
+Route::middleware(['auth', 'role:Praktijkmanagement'])->prefix('management')->group(function () {
+    Route::get('/management/shboard', [Managementdashboard::class, 'index'])->name('adminn.dashboard');
+
+        Route::get('/dashboard', function () { 
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('admin.users.index');
     Route::get('/patienten', [App\Http\Controllers\AdminController::class, 'patienten'])->name('admin.patienten.index');
-// });
+    Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('medewerker.factuur.index');
+    
+    // Afspraken routes
+    Route::get('/afspraken', [AfsprakenController::class, 'index'])->name('afspraken.index');
+});
 
 // Medewerker routes (accessible by Praktijkmanagement, Tandarts, Mondhygiënist, and Assistent)
 Route::middleware(['auth', 'role:Praktijkmanagement,Tandarts,Mondhygiënist,Assistent'])->prefix('medewerker')->group(function () {
     Route::get('/dashboard', function () {
         return view('medewerker.dashboard');
     })->name('medewerker.dashboard');
+
+
 
     Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('medewerker.factuur.index');
 });

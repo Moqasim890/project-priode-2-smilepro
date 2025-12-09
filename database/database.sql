@@ -370,7 +370,7 @@ INSERT INTO persoon (gebruikerid, voornaam, tussenvoegsel, achternaam, geboorted
 (NULL, 'David', 'van der', 'Berg', '1982-06-25', 1);
 
 -- Patienten (gebruik de zojuist aangemaakte personen, skip de eerste 5 test users)
-INSERT INTO patient (persoonid, nummer, medischdossier, isactief) 
+INSERT INTO patient (persoonid, nummer, opmerking, isactief) 
 SELECT id, CONCAT('P', LPAD(id - 5, 5, '0')), 
     CASE 
         WHEN voornaam = 'Jan' THEN 'Regelmatige controles, geen bijzonderheden'
@@ -538,4 +538,3 @@ SELECT
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
 WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt');
-
