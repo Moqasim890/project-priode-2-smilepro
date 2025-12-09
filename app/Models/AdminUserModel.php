@@ -97,11 +97,11 @@ class AdminUserModel extends Model
             
             // Voer stored procedure uit
             $result = DB::select("CALL SP_GetAllPatienten()");
-            
+
             // Log succesvol resultaat
             Log::info('SP_GetAllPatienten succesvol');
             
-            return $result;
+            return $result ?? [];
         } catch (\Throwable $e) {
             // Log dat er een fout was
             Log::error('SP_GetAllPatienten mislukt');
@@ -125,7 +125,7 @@ class AdminUserModel extends Model
             // Log succesvol resultaat
             Log::info('SP_GetAllBerichten succesvol');
             
-            return $result;
+            return $result ?? [];
         } catch (\Throwable $e) {
             // Log dat er een fout was
             Log::error('SP_GetAllBerichten mislukt');
