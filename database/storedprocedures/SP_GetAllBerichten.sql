@@ -2,16 +2,19 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS SP_GetAllBerichten $$
 
-DROP PROCEDURE IF EXISTS SP_GetAllFeedback $$
-CREATE PROCEDURE SP_GetAllFeedback ()
+CREATE PROCEDURE SP_GetAllBerichten ()
 BEGIN
     SELECT
-        f.id AS user_id,
-        f.beoordeling,
-        f.praktijkemail,
-        f.praktijktelefoon,
-        f.opmerking
-    FROM feedback AS f;
+        comm.patientid,
+        comm.medewerkerid,
+        prsn.voornaam,
+        prsn.tussenvoegsel,
+        prsn.achternaam,
+        comm.bericht,
+        comm.Verzonden_datum
+    FROM communicatie AS comm
+    JOIN patient      AS ptnt ON comm.patientid = ptnt.id
+    JOIN persoon      AS prsn ON ptnt.persoonid = prsn.id;
 END $$
 
 DELIMITER ;
