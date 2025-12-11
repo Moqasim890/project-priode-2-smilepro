@@ -112,23 +112,23 @@ class AdminUserModel extends Model
     } 
 
     /**
-     * Haal alle Berichten
+     * Haal alle Feedback
      */
-    static public function SP_GetAllBerichten(){
+    static public function SP_GetAllFeedback(){
         try {
             // Log de aanroep
-            Log::info('SP_GetAllBerichten uitgevoerd');
+            Log::info('SP_GetAllFeedback uitgevoerd');
             
             // Voer stored procedure uit
-            $result = DB::select("CALL SP_GetAllBerichten()");
+            $result = DB::select("CALL SP_GetAllFeedback()");
             
             // Log succesvol resultaat
-            Log::info('SP_GetAllBerichten succesvol');
+            Log::info('SP_GetAllFeedback succesvol');
             
             return $result ?? [];
         } catch (\Throwable $e) {
             // Log dat er een fout was
-            Log::error('SP_GetAllBerichten mislukt');
+            Log::error('SP_GetAllFeedback mislukt');
             
             // Return lege array bij fout zodat de applicatie blijft werken
             return [];

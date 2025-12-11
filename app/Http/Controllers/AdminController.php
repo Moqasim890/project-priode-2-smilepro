@@ -76,17 +76,17 @@ class AdminController extends Controller
 
 
     /**
-     * Toon berichten overzicht.
+     * Toon feedback overzicht.
      * 
-     * Haalt berichten op via stored procedure.
+     * Haalt feedback op via stored procedure.
      */
-    function berichten()
+    function feedback()
     {
-        $berichten = User::SP_GetAllberichten();
-        // dd($berichten);
+        $feedback = User::SP_GetAllfeedback();
+        // dd($feedback);
         // Stuur data naar view
-        return view('admin.berichten.index', [
-            'berichten' => $berichten
+        return view('admin.feedback.index', [
+            'feedback' => $feedback
         ]);
     }
 }

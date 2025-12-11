@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('admin.users.index');
     Route::get('/patienten', [App\Http\Controllers\AdminController::class, 'patienten'])->name('admin.patienten.index');
+    Route::get('/feedback', [App\Http\Controllers\AdminController::class, 'feedback'])->name('admin.feedback.index');
     Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('medewerker.factuur.index');
     
     // Afspraken routes
