@@ -43,11 +43,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('admin.users.index');
     Route::get('/patienten', [App\Http\Controllers\AdminController::class, 'patienten'])->name('admin.patienten.index');
     Route::get('/feedback', [App\Http\Controllers\AdminController::class, 'feedback'])->name('admin.feedback.index');
+    Route::get('/berichten', [App\Http\Controllers\AdminController::class, 'berichten'])->name('admin.berichten.index');
     Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('medewerker.factuur.index');
     
     // Afspraken routes
     Route::get('/afspraken', [AfsprakenController::class, 'index'])->name('afspraken.index');
 // });
+
+Route::middleware(['auth', 'role:Patiënt'])->prefix('patient')->group(function () {
+    Route::get('/berichten', [App\Http\Controllers\PatientController::class, 'berichten'])->name('Patient.berichten.index');
+});
 
 // Medewerker routes (accessible by Praktijkmanagement, Tandarts, Mondhygiënist, and Assistent)
 Route::middleware(['auth', 'role:Praktijkmanagement,Tandarts,Mondhygiënist,Assistent'])->prefix('medewerker')->group(function () {

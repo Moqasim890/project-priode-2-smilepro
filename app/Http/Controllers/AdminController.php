@@ -89,4 +89,14 @@ class AdminController extends Controller
             'feedback' => $feedback
         ]);
     }
+
+    function berichten()
+    {
+        $berichten = User::SP_GetAllBerichten();
+        // dd($Berichten);
+        // Stuur data naar view
+        return view('admin.berichten.index', [
+            'berichten' => $berichten
+        ]);
+    }
 }

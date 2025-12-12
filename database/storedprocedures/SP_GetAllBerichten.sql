@@ -7,9 +7,7 @@ BEGIN
     SELECT
         comm.patientid,
         comm.medewerkerid,
-        prsn.voornaam,
-        prsn.tussenvoegsel,
-        prsn.achternaam,
+        CONCAT_WS(' ', prsn.voornaam, prsn.tussenvoegsel, prsn.achternaam) AS volledigeNaam,
         comm.bericht,
         comm.Verzonden_datum
     FROM communicatie AS comm

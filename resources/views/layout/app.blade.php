@@ -32,23 +32,28 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     @auth
-
-                                                        {{-- Show role-based dashboard links --}}
-                                @if(auth()->user()->hasRole('Praktijkmanagement'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('admin.dashboard') }}">
-                                            <i class="bi bi-speedometer2 me-1"></i>Management Dashboard
-                                        </a>
-                                    </li>
-                                @endif
-                                @if(auth()->user()->hasAnyRole(['Praktijkmanagement', 'Tandarts', 'Mondhygiënist', 'Assistent']))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
-                                            <i class="bi bi-briefcase me-1"></i>Medewerker Dashboard
-                                        </a>
-                                    </li>
-                                @endif
-                                
+                            {{-- Show role-based dashboard links --}}
+                            @if(auth()->user()->hasRole('Praktijkmanagement'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                                        <i class="bi bi-speedometer2 me-1"></i>Management Dashboard
+                                    </a>
+                                </li>
+                            @endif
+                            @if(auth()->user()->hasAnyRole(['Praktijkmanagement', 'Tandarts', 'Mondhygiënist', 'Assistent']))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
+                                        <i class="bi bi-briefcase me-1"></i>Medewerker Dashboard
+                                    </a>
+                                </li>
+                            @endif
+                            @if(auth()->user()->hasAnyRole(['Praktijkmanagement', 'Patiënt']))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
+                                        <i class="bi bi-bell me-1"></i>Meldingen
+                                    </a>
+                                </li>
+                            @endif
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('adminn.dashboard') }}">
                                 <i class="bi bi-speedometer2 me-1"></i>Dashboard
