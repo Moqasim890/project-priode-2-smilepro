@@ -1,4 +1,5 @@
-USE tandarts;
+-- Active: 1764442526270@@127.0.0.1@3333@smilepro_db
+
 DROP PROCEDURE IF EXISTS SP_GetAllUsers;
 DROP PROCEDURE IF EXISTS SP_CountAllUsers;
 DELIMITER $$

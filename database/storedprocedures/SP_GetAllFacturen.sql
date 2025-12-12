@@ -1,3 +1,4 @@
+-- Active: 1764442526270@@127.0.0.1@3333@smilepro_db
 USE tandarts;
 DROP PROCEDURE IF EXISTS SP_GetAllFacturen;
 DROP PROCEDURE IF EXISTS SP_GetAllTotaalbedragFacturen;

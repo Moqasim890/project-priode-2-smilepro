@@ -1,4 +1,0 @@
-USE tandarts;
-
-DELIMITER $$
-
