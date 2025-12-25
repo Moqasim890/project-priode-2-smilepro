@@ -47,9 +47,9 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(auth()->user()->hasAnyRole(['Praktijkmanagement', 'Patiënt']))
+                            @if(auth()->user()->hasAnyRole(['Patiënt']))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
+                                    <a class="nav-link" href="{{ route('Patient.berichten.index') }}">
                                         <i class="bi bi-bell me-1"></i>Meldingen
                                     </a>
                                 </li>

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\PatientModel as Patient;
 
 class PatientController extends Controller
 {
@@ -12,6 +14,21 @@ class PatientController extends Controller
     public function index()
     {
         //
+    }
+
+    /**
+     * Deze functie haalt de berichten op voor een patient op
+     * door id te gebruiken in de stored procedure
+     */
+    public function getBerichtenById()
+    {
+        $patientid = Auth::Id();
+        $berichten = Patient::SP_GetBerichtenById($patientid);
+        // dd($berichten);
+
+        return view('Patient.berichten.index', [
+            'berichten' => $berichten
+        ]);
     }
 
     /**
