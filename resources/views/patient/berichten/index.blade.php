@@ -15,41 +15,38 @@
 		<div class="alert alert-success">{{ session('success') }}</div>
 	@endif
 
-	<div class="card shadow-sm">
-		<div class="card-body p-0">
-			<div class="table-responsive">
-				<table class="table table-hover align-middle mb-0">
-					<thead class="table-light">
-						<tr>
-							<th scope="col">Volledige Naam</th>
-							<th scope="col">bericht</th>
-							<th scope="col" class="text-end">Acties</th>
-						</tr>
-					</thead>
-					<tbody>
-						@forelse($berichten as $bericht)
-							<tr>
-                                <td>{{ $bericht->volledigeNaam }}</td>
-                                <td>{{ $bericht->bericht }}</td>
-								<td class="text-end">
-									<a href="#" class="btn btn-sm btn-outline-primary" title="Bekijken">
-										<i class="bi bi-eye"></i>
-									</a>
-									<a href="#" class="btn btn-sm btn-outline-warning" title="Bewerken">
-										<i class="bi bi-pencil"></i>
-									</a>
-									<button type="button" class="btn btn-sm btn-outline-danger" title="Verwijderen" disabled>
-										<i class="bi bi-trash"></i>
-									</button>
-								</td>
-							</tr>
-						@empty
-                            Er zijn nog geen berichten geregistreerd.
-						@endforelse
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+    
+    @forelse($berichten as $bericht)
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-6">
+                        <h6>Van: 
+                            @if ( $bericht->medewerkerid == NULL || "" )
+                                SYSTEEM
+                            @else 
+                                {{ $bericht->medewerkerNaam }}
+                            @endif
+                        </h6>
+                        <h6>Aan: {{ $bericht->patientNaam }}</h6>
+                        <p class="m-0">{{ $bericht->bericht }}</p>
+                    </div>
+                    <div class="col-6 d-flex flex-row justify-content-end align-items-center gap-1">
+					    <a href="#" class="btn btn-sm btn-outline-primary" title="Bekijken">
+						    <i class="bi bi-eye"></i>
+					    </a>
+					    <a href="#" class="btn btn-sm btn-outline-warning" title="Bewerken">
+					    	<i class="bi bi-pencil"></i>
+					    </a>
+					    <button type="button" class="btn btn-sm btn-outline-danger" title="Verwijderen" disabled>
+					    	<i class="bi bi-trash"></i>
+					    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @empty
+        <h6>U heeft momenteel nog geen meldingen.</h6>
+    @endforelse
 </div>
 @endsection
