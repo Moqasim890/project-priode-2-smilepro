@@ -23,4 +23,20 @@ class PatientModel extends Model
             return [];
         }
     }
+
+    static public function SP_CountBerichtenById($patientId)
+    {
+        try {
+            Log::info('SP_CountBerichtenById uitgevoerd');
+
+            $result = DB::select('CALL SP_CountBerichtenById(?)', [$patientId]);
+
+            Log::info('SP_CountBerichtenById succesvol');
+
+            return $result ?? [];
+        } catch (\Throwable $e) {
+            Log::info('SP_CountBerichtenById niet succesvol uitgevoerd');
+            return [];
+        }
+    }
 }

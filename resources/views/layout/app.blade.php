@@ -50,7 +50,7 @@
                             @if(auth()->user()->hasAnyRole(['Patiënt']))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('Patient.berichten.index') }}">
-                                        <i class="bi bi-bell me-1"></i>Meldingen
+                                        <i class="bi bi-bell me-1"></i>{{ $aantalberichten }} Meldingen
                                     </a>
                                 </li>
                             @endif
