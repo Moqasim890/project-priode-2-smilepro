@@ -23,11 +23,13 @@ class PatientController extends Controller
     public function getBerichtenById()
     {
         $patientid = Auth::Id();
+        $naam      = Auth::user()->name; //<- op een mooie dag zou dit de naam van de patient zeggen
         $berichten = Patient::SP_GetBerichtenById($patientid);
-        // dd($berichten);
+        // dd($naam);
 
         return view('Patient.berichten.index', [
-            'berichten' => $berichten
+            'berichten' => $berichten,
+            'naam'      => $naam
         ]);
     }
 

@@ -28,7 +28,13 @@
                                 {{ $bericht->medewerkerNaam }}
                             @endif
                         </h6>
-                        <h6>Aan: {{ $bericht->patientNaam }}</h6>
+                        <h6>Aan: 
+                            @if ( $bericht->patientNaam == $naam )
+                                U
+                            @else 
+                                {{ $bericht->patientNaam }}
+                            @endif
+                        </h6>
                         <p class="m-0">{{ $bericht->bericht }}</p>
                     </div>
                     <div class="col-6 d-flex flex-row justify-content-end align-items-center gap-1">

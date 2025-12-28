@@ -94,11 +94,12 @@ class AdminController extends Controller
     function berichten()
     {
         $berichten = User::SP_GetAllBerichten();
-        // $name = Auth::user()->name;
+        $naam      = Auth::user()->name;
         // dd($name);
         // Stuur data naar view
         return view('admin.berichten.index', [
-            'berichten' => $berichten
+            'berichten' => $berichten,
+            'naam'      => $naam
         ]);
     }
 }
