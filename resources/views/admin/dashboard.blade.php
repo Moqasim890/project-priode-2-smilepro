@@ -68,6 +68,23 @@
             </div>
         </div>
         
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-warning bg-opacity-10 rounded p-3 me-3">
+                            <i class="bi bi-bell text-warning fs-3"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">Berichten beheren</h5>
+                        </div>
+                    </div>
+                    <p class="card-text text-muted">Beheer alle verzonden berichten binnen het systeem</p>
+                    <a href="{{ route('admin.berichten.index') }}" class="btn btn-outline-warning btn-sm">Beheren</a>
+                </div>
+            </div>
+        </div>
+
     </div>
     
     <div class="row mt-4">

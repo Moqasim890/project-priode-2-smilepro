@@ -4,7 +4,7 @@
 <div class="container py-5">
 	<div class="d-flex justify-content-between align-items-center mb-4">
 		<h1 class="h3 fw-bold">
-			<i class="bi bi-people-fill me-2"></i>Berichten
+			<i class="bi bi-bell me-2"></i>Berichten
 		</h1>
 		<a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary btn-sm">
 			<i class="bi bi-arrow-left me-1"></i>Terug naar dashboard

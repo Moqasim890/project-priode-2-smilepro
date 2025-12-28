@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\AdminUserModel as User;
 
@@ -93,7 +94,8 @@ class AdminController extends Controller
     function berichten()
     {
         $berichten = User::SP_GetAllBerichten();
-        // dd($Berichten);
+        // $name = Auth::user()->name;
+        // dd($name);
         // Stuur data naar view
         return view('admin.berichten.index', [
             'berichten' => $berichten
