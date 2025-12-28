@@ -15,7 +15,7 @@
 		<div class="alert alert-success">{{ session('success') }}</div>
 	@endif
 
-    <div class="border p-2 shadow-sm overflow-y-auto" style="max-height: 60dvh">
+    <div class="border p-2 shadow-sm overflow-y-auto" style="max-height: 60dvh; height: 60dvh;">
 		@forelse($berichten as $bericht)
 			<div class="card shadow-sm mt-2">
 				<div class="card-body p-4">
