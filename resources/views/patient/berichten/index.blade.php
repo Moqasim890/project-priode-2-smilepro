@@ -15,6 +15,11 @@
 		<div class="alert alert-success">{{ session('success') }}</div>
 	@endif
 
+    <div class="mb-2">
+        <a href="" class="fs-5 text-decoration-none text-black border border-black rounded p-1">
+            <i class="bi bi-envelope-plus me-1 p-0"></i>Nieuwe bericht opstellen
+        </a>
+    </div>
     <div class="border p-2 shadow-sm overflow-y-auto" style="max-height: 60dvh; height: 60dvh;">
         @forelse($berichten as $bericht)
             <div class="card shadow-sm">
