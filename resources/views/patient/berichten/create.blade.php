@@ -12,7 +12,7 @@
 	</div>
 
     <div class="border p-2 shadow-sm overflow-y-auto" style="max-height: 60dvh; height: 55dvh;">
-        <form action="">
+        <form action="" method="post">
             <div class="mb-3">
                 <label for="email" class="form-label">Aan:</label>
                 <input type="email" class="form-control" id="email" placeholder="name@example.com">
