@@ -16,7 +16,7 @@
 	@endif
 
     <div class="mb-2">
-        <a href="" class="fs-5 text-decoration-none text-black border border-black rounded p-1">
+        <a href="{{ route('Patient.berichten.create') }}" class="fs-5 text-decoration-none text-black border border-black rounded p-1">
             <i class="bi bi-envelope-plus me-1 p-0"></i>Nieuwe bericht opstellen
         </a>
     </div>

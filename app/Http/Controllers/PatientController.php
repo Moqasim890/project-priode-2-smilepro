@@ -38,7 +38,7 @@ class PatientController extends Controller
      */
     public function create()
     {
-        //
+        return view('Patient.berichten.create');
     }
 
     /**
