@@ -22,7 +22,7 @@
     </div>
     <div class="border p-2 shadow-sm overflow-y-auto" style="max-height: 60dvh; height: 60dvh;">
         @forelse($berichten as $bericht)
-            <div class="card shadow-sm">
+            <div class="card shadow-sm mt-2">
                 <div class="card-body p-4">
                     <div class="row">
                         <div class="col-6">

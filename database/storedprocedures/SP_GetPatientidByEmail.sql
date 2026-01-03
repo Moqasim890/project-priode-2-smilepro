@@ -5,10 +5,10 @@ CREATE PROCEDURE SP_GetPatientidByEmail(
     IN p_email VARCHAR(255)
 )
 BEGIN
-    SELECT p.id
-    FROM patient p
-    JOIN persoon pe ON pe.id = p.persoonid
-    JOIN user u ON u.id = pe.gebruikerid
+    SELECT pa.id
+    FROM patient pa
+    JOIN persoon pe ON pe.id = pa.persoonid
+    JOIN users u ON u.id = pe.gebruikerid
     WHERE u.email COLLATE utf8mb4_unicode_ci = p_email;
 END $$
 

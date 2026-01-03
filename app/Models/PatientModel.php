@@ -8,6 +8,22 @@ use Illuminate\Support\Facades\Log;
 
 class PatientModel extends Model
 {
+    static public function SP_GetPatientIdByUserId($userid)
+    {
+        try {
+            Log::info('SP_GetPatientIdByUserId uitgevoerd');
+
+            $result = DB::selectOne('CALL SP_GetPatientIdByUserId(?)', [$userid]);
+
+            Log::info('SP_GetPatientIdByUserId succesvol');
+
+            return $result?->patientid;;
+        } catch (\Throwable $e) {
+            Log::info('SP_GetPatientIdByUserId niet succesvol uitgevoerd');
+            return [];
+        }
+    }
+
     static public function SP_GetBerichtenById($patientId)
     {
         try {

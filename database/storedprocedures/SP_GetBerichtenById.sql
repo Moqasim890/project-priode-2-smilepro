@@ -23,7 +23,8 @@ BEGIN
     LEFT JOIN medewerker AS med   ON comm.medewerkerid = med.id
     LEFT JOIN persoon   AS prsn_m ON med.persoonid = prsn_m.id
 
-    WHERE comm.patientid = p_patientid;
+    WHERE comm.patientid = p_patientid
+    ORDER BY comm.Verzonden_datum DESC;
 END $$
 
 DELIMITER ;

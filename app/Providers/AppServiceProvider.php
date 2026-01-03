@@ -39,8 +39,9 @@ class AppServiceProvider extends ServiceProvider
         */
         View::composer('layout.*', function ($view) {
             if (Auth::check()) {
-                $id = Auth::id();
-                $result = Patient::SP_CountBerichtenById($id);
+                $userid          = Auth::Id();
+                $id              = Patient::SP_GetPatientIdByUserId($userid);
+                $result          = Patient::SP_CountBerichtenById($id);
                 $aantalberichten = (string) $result[0]->AantalBerichten;
             } else {
                 $aantalberichten = "0";
