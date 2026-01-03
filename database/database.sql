@@ -198,7 +198,7 @@ CREATE TABLE communicatie (
     patientid INT NOT NULL,
     medewerkerid INT,
     bericht TEXT NOT NULL,
-    verzonden_datum DATETIME NOT NULL,
+    verzonden_datum DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     isactief TINYINT(1) DEFAULT 1,
     opmerking TEXT,
     datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,

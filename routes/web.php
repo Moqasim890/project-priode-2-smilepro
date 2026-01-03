@@ -44,6 +44,8 @@ Route::middleware(['auth', 'role:Praktijkmanagement'])->prefix('management')->gr
     Route::get('/patienten', [App\Http\Controllers\AdminController::class, 'patienten'])->name('admin.patienten.index');
     Route::get('/feedback', [App\Http\Controllers\AdminController::class, 'feedback'])->name('admin.feedback.index');
     Route::get('/berichten', [App\Http\Controllers\AdminController::class, 'berichten'])->name('admin.berichten.index');
+    Route::get('/berichten/create', [App\Http\Controllers\AdminController::class, 'create'])->name('admin.berichten.create');
+    Route::post('/berichten', [App\Http\Controllers\AdminController::class, 'store'])->name('admin.berichten.store');
     Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('medewerker.factuur.index');
     
     // Afspraken routes

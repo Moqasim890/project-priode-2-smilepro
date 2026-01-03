@@ -155,4 +155,42 @@ class AdminUserModel extends Model
             return [];
         }
     } 
+
+    static public function SP_CreateBericht($data)
+    {
+        // try {
+            Log::info('SP_CreateBericht uitgevoerd');
+
+            DB::select('CALL SP_CreateBericht(?, ?, ?)', [
+                $data['patientid'],
+                $data['medewerkerid'],
+                $data['bericht']
+            ]);
+
+
+            Log::info('SP_CreateBericht succesvol');
+
+             return $result ?? "er is iets fout gegaan";
+        // } catch (\Throwable $e) {
+        //     Log::info('SP_CreateBericht niet succesvol uitgevoerd');
+        //     return "er is iets fout gegaan";
+        // }
+    }
+
+    static public function SP_GetPatientidByEmail($email)
+    {
+        // try {
+            Log::info('SP_GetPatientidByEmail uitgevoerd');
+
+            $result = DB::selectOne('CALL SP_GetPatientidByEmail(?)', [$email]);
+
+
+            Log::info('SP_GetPatientidByEmail succesvol');
+
+            return $result->id ?? "er is iets fout gegaan";
+        // } catch (\Throwable $e) {
+        //     Log::info('SP_GetPatientidByEmail niet succesvol uitgevoerd');
+        //     return "er is iets fout gegaan";
+        // }
+    }
 }

@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\AdminUserModel as User;
+use PHPUnit\Event\Code\IssueTrigger\SelfTrigger;
 
 /**
  * AdminController
@@ -101,5 +103,52 @@ class AdminController extends Controller
             'berichten' => $berichten,
             'naam'      => $naam
         ]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('admin.berichten.create');
+    }
+
+    static public function GetPatientidByEmail($email)
+    {
+        return User::SP_GetPatientidByEmail($email);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        /**
+         * Om de bericht te verzenden naar de juiste medewerkerId
+         * gaan we de email moeten matchen met een id in de database
+         * dit doen we door @var string $validated['Email']
+         * eerst te zoeken in de database met @method FindEmail($Email)
+         * daarna kijken we in de row naar de persoonid
+         * en dan checken we welke gebruikerid/userid daarbij hoort
+         * en dat is de juis
+         */
+        $data = $request->validate([
+             'email'        => 'required|string|max:80' 
+            ,'bericht'      => 'required|string|max:1500'
+        ]);
+
+        $data['medewerkerid'] = NULL; // Moet eigenlijk -> Auth::Id(); maar er zijn geen medewerkers en praktijkmanagement is blijkbaar geen medewerker
+
+        $data['patientid'] = Self::GetPatientidByEmail($data['email']);
+
+        // dd($data['patientid']);
+
+        if (empty($data['medewerkerid'])) {
+            $data['medewerkerid'] = NULL;
+        }
+
+        User::SP_CreateBericht($data);
+
+        return redirect()->route('admin.berichten.index');
     }
 }

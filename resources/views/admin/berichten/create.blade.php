@@ -6,13 +6,13 @@
 		<h1 class="h3 fw-bold">
 			<i class="bi bi-envelope-plus me-2"></i>Bericht opstellen
 		</h1>
-		<a href="{{ route('Patient.berichten.index') }}" class="btn btn-outline-secondary btn-sm">
+		<a href="{{ route('admin.berichten.index') }}" class="btn btn-outline-secondary btn-sm">
 			<i class="bi bi-arrow-left me-1"></i>Terug
 		</a>
 	</div>
 
-    <div class="border p-2 shadow-sm overflow-y-auto" style="max-height: 60dvh; height: 55dvh;">
-        <form action="{{ route('Patient.berichten.store') }}" method="post">
+    <div class="border p-2 shadow-sm overflow-y-auto" style="max-height: 60dvh; height: 60dvh;">
+        <form action="{{ route('admin.berichten.store') }}" method="post">
             @csrf
             <div class="mb-3">
                 <label for="email" class="form-label">Aan:</label>
