@@ -11,10 +11,6 @@
 		</a>
 	</div>
 
-	@if(session('success'))
-		<div class="alert alert-success">{{ session('success') }}</div>
-	@endif
-
     <div class="mb-2">
         <a href="{{ route('admin.berichten.create') }}" class="fs-5 text-decoration-none text-black border border-black rounded p-1">
             <i class="bi bi-envelope-plus me-1 p-0"></i>Nieuwe bericht opstellen
@@ -43,17 +39,27 @@
 							</h6>
 							<p class="m-0">{{ $bericht->bericht }}</p>
 						</div>
-						<div class="col-6 d-flex flex-row justify-content-end align-items-center gap-1">
-							<a href="#" class="btn btn-sm btn-outline-primary" title="Bekijken">
-								<i class="bi bi-eye"></i>
-							</a>
-							<a href="#" class="btn btn-sm btn-outline-warning" title="Bewerken">
-								<i class="bi bi-pencil"></i>
-							</a>
-							<button type="button" class="btn btn-sm btn-outline-danger" title="Verwijderen" disabled>
-								<i class="bi bi-trash"></i>
-							</button>
-						</div>
+                        <div class="col-6 d-flex flex-column align-items-end gap-1">
+                            <div class="text-end mt-1">
+                                <?php
+                                    $Verzonden_datum = date_create($bericht->Verzonden_datum);
+                                    $Formated_date = date_format($Verzonden_datum,"Y-m-d H:i");
+                                ?>
+                                <small class="text-muted">verzonden op:</small><br>
+                                <small>{{ $Formated_date }}</small>
+                            </div>
+                            <div class="d-flex gap-1">
+                                <a href="#" class="btn btn-sm btn-outline-primary" title="Bekijken">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="#" class="btn btn-sm btn-outline-warning" title="Bewerken">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger" title="Verwijderen" disabled>
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
 					</div>
 				</div>
 			</div>

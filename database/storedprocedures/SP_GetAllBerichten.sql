@@ -20,7 +20,7 @@ BEGIN
 
     LEFT JOIN medewerker AS med   ON comm.medewerkerid = med.id
     LEFT JOIN persoon   AS prsn_m ON med.persoonid = prsn_m.id
-
+    ORDER BY comm.Verzonden_datum DESC;
 END $$
 
 DELIMITER ;

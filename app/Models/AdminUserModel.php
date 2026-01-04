@@ -158,39 +158,49 @@ class AdminUserModel extends Model
 
     static public function SP_CreateBericht($data)
     {
-        // try {
+        try {
+            // Log de aanroep
             Log::info('SP_CreateBericht uitgevoerd');
 
+            // Voer stored procedure uit
             DB::select('CALL SP_CreateBericht(?, ?, ?)', [
                 $data['patientid'],
                 $data['medewerkerid'],
                 $data['bericht']
             ]);
 
-
+            // Log succesvol
             Log::info('SP_CreateBericht succesvol');
 
-             return $result ?? "er is iets fout gegaan";
-        // } catch (\Throwable $e) {
-        //     Log::info('SP_CreateBericht niet succesvol uitgevoerd');
-        //     return "er is iets fout gegaan";
-        // }
+            return $result ?? [];
+        } catch (\Throwable $e) {
+            // Log dat er een fout was
+            Log::info('SP_CreateBericht niet succesvol uitgevoerd');
+
+            // Return lege array bij fout zodat de applicatie blijft werken
+            return [];
+        }
     }
 
     static public function SP_GetPatientidByEmail($email)
     {
-        // try {
+        try {
+            // Log de aanroep
             Log::info('SP_GetPatientidByEmail uitgevoerd');
 
+            // Voer stored procedure uit
             $result = DB::selectOne('CALL SP_GetPatientidByEmail(?)', [$email]);
 
-
+            // Log succesvol
             Log::info('SP_GetPatientidByEmail succesvol');
 
-            return $result->id ?? "er is iets fout gegaan";
-        // } catch (\Throwable $e) {
-        //     Log::info('SP_GetPatientidByEmail niet succesvol uitgevoerd');
-        //     return "er is iets fout gegaan";
-        // }
+            return $result?->patientid;
+        } catch (\Throwable $e) {
+            // Log dat er een fout was
+            Log::info('SP_GetPatientidByEmail niet succesvol uitgevoerd');
+
+            // Return lege array bij fout zodat de applicatie blijft werken
+            return "er is iets fout gegaan";
+        }
     }
 }

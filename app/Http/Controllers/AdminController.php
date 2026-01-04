@@ -115,7 +115,13 @@ class AdminController extends Controller
 
     static public function GetPatientidByEmail($email)
     {
-        return User::SP_GetPatientidByEmail($email);
+        $id = User::SP_GetPatientidByEmail($email);
+
+        if(!empty($id)) {
+            return $id;
+        } else {
+            return NULL;
+        }
     }
 
     /**
@@ -141,14 +147,21 @@ class AdminController extends Controller
 
         $data['patientid'] = Self::GetPatientidByEmail($data['email']);
 
+
         // dd($data['patientid']);
 
         if (empty($data['medewerkerid'])) {
             $data['medewerkerid'] = NULL;
         }
 
+        if ($data['patientid'] === NULL) {
+            return redirect()
+                ->route('admin.berichten.index')
+                ->with('error', 'Deze gebruiker bestaat niet, check of je de email wel correct hebt ingevoerd.');
+        }
+
         User::SP_CreateBericht($data);
 
-        return redirect()->route('admin.berichten.index');
+        return redirect()->route('admin.berichten.index')->with('success', 'Bericht succesvol verzonden!');
     }
 }
