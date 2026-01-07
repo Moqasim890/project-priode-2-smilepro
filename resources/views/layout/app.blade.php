@@ -21,47 +21,47 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
-                    {{-- Management Dashboard --}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.dashboard') }}">
-                            <i class="bi bi-speedometer2 me-1"></i>Management
-                        </a>
-                    </li>
-
-                    {{-- Medewerker Dashboard --}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
-                            <i class="bi bi-house me-1"></i>Dashboard
-                        </a>
-                    </li>
-
-                    {{-- Afspraken --}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('medewerker.afspraken.index') }}">
-                            <i class="bi bi-calendar-check me-1"></i>Afspraken
-                        </a>
-                    </li>
-
-                    {{-- Patiënten --}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.patienten.index') }}">
-                            <i class="bi bi-people me-1"></i>Patiënten
-                        </a>
-                    </li>
-
-                    {{-- Facturen --}}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('medewerker.factuur.index') }}">
-                            <i class="bi bi-receipt me-1"></i>Facturen
-                        </a>
-                    </li>
-
-                    {{-- Divider --}}
-                    <li class="nav-item d-none d-lg-block">
-                        <span class="nav-link text-secondary">|</span>
-                    </li>
-
                     @auth
+                        {{-- Management Dashboard --}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                                <i class="bi bi-speedometer2 me-1"></i>Management
+                            </a>
+                        </li>
+
+                        {{-- Medewerker Dashboard --}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
+                                <i class="bi bi-house me-1"></i>Dashboard
+                            </a>
+                        </li>
+
+                        {{-- Afspraken --}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('medewerker.afspraken.index') }}">
+                                <i class="bi bi-calendar-check me-1"></i>Afspraken
+                            </a>
+                        </li>
+
+                        {{-- Patiënten --}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('admin.patienten.index') }}">
+                                <i class="bi bi-people me-1"></i>Patiënten
+                            </a>
+                        </li>
+
+                        {{-- Facturen --}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('medewerker.factuur.index') }}">
+                                <i class="bi bi-receipt me-1"></i>Facturen
+                            </a>
+                        </li>
+
+                        {{-- Divider --}}
+                        <li class="nav-item d-none d-lg-block">
+                            <span class="nav-link text-secondary">|</span>
+                        </li>
+
                         {{-- User Dropdown --}}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
