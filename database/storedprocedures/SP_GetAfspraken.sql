@@ -1,15 +1,15 @@
-USE tandarts;
+USE smilepro;
 
 -- =========================================
--- STORED PROCEDURES VOOR AFSPRAKEN
+-- STORED PROCEDURES VOOR AFSPRAKEN (GET)
 -- =========================================
 
 -- Verwijder bestaande procedures
 DROP PROCEDURE IF EXISTS SP_GetAllAfspraken;
 DROP PROCEDURE IF EXISTS SP_GetAfspraakById;
-DROP PROCEDURE IF EXISTS SP_CreateAfspraak;
 DROP PROCEDURE IF EXISTS SP_GetAfsprakenStatistieken;
 DROP PROCEDURE IF EXISTS SP_GetBeschikbareMedewerkers;
+DROP PROCEDURE IF EXISTS SP_GetAllPatientenDropdown;
 
 DELIMITER $$
 
@@ -84,51 +84,6 @@ BEGIN
 END$$
 
 -- =========================================
--- SP_CreateAfspraak
--- Maakt een nieuwe afspraak aan
--- =========================================
--- Parameters:
---   p_patientid    : ID van de patiënt (foreign key naar patient tabel)
---   p_medewerkerid : ID van de medewerker/tandarts (foreign key naar medewerker tabel)
---   p_datum        : Datum van de afspraak
---   p_tijd         : Tijd van de afspraak
---   p_status       : Status van de afspraak (bijv. 'Gepland', 'Bevestigd', 'Geannuleerd')
---   p_opmerking    : Optionele opmerking bij de afspraak
--- =========================================
--- Relaties in de database:
---   afspraken.patientid    -> patient.id    (verwijst naar patiënt)
---   afspraken.medewerkerid -> medewerker.id (verwijst naar behandelaar)
---   patient.persoonid      -> persoon.id    (patiënt persoonsgegevens)
---   medewerker.persoonid   -> persoon.id    (medewerker persoonsgegevens)
--- =========================================
--- WAAROM GEEN JOINS?
--- Deze procedure gebruikt geen JOINs omdat het een INSERT operatie is.
--- Bij een INSERT hoeven we alleen de ID's (patientid, medewerkerid) op te slaan.
--- We hoeven geen gegevens uit andere tabellen op te halen.
--- De foreign key constraints in de database zorgen ervoor dat de ID's geldig zijn.
--- JOINs zijn alleen nodig bij SELECT queries wanneer we gegevens uit 
--- meerdere tabellen willen combineren (zoals namen van patiënten/medewerkers).
--- =========================================
-CREATE PROCEDURE SP_CreateAfspraak(
-    IN p_patientid INT,
-    IN p_medewerkerid INT,
-    IN p_datum DATE,
-    IN p_tijd TIME,
-    IN p_status VARCHAR(15),
-    IN p_opmerking TEXT
-)
-BEGIN
-    -- Voeg nieuwe afspraak toe in de afspraken tabel
-    -- De patientid en medewerkerid zijn foreign keys die verwijzen naar 
-    -- respectievelijk de patient en medewerker tabellen
-    INSERT INTO afspraken (patientid, medewerkerid, datum, tijd, status, opmerking)
-    VALUES (p_patientid, p_medewerkerid, p_datum, p_tijd, p_status, p_opmerking);
-    
-    -- Return de aangemaakte afspraak ID (auto-increment waarde)
-    SELECT LAST_INSERT_ID() AS id;
-END$$
-
--- =========================================
 -- SP_GetAfsprakenStatistieken
 -- Haalt statistieken op voor dashboard
 -- =========================================
@@ -165,10 +120,8 @@ BEGIN
 END$$
 
 -- =========================================
--- SP_GetAllPatienten (voor dropdown)
+-- SP_GetAllPatientenDropdown (voor dropdown)
 -- =========================================
-DROP PROCEDURE IF EXISTS SP_GetAllPatientenDropdown$$
-
 CREATE PROCEDURE SP_GetAllPatientenDropdown()
 BEGIN
     SELECT 
@@ -182,4 +135,3 @@ BEGIN
 END$$
 
 DELIMITER ;
-

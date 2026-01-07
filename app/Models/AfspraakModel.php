@@ -83,8 +83,6 @@ class AfspraakModel extends Model
     public static function CreateAfspraak(array $data): ?int
     {
         try {
-            DB::beginTransaction();
-
             $result = DB::select('CALL SP_CreateAfspraak(?, ?, ?, ?, ?, ?)', [
                 $data['patientid'],
                 $data['medewerkerid'],
@@ -95,16 +93,29 @@ class AfspraakModel extends Model
             ]);
 
             if (empty($result) || !isset($result[0]->id)) {
-                DB::rollBack();
+                Log::error('CreateAfspraak: Geen ID geretourneerd van stored procedure');
                 return null;
             }
 
-            DB::commit();
-            return (int) $result[0]->id;
+            $afspraakId = (int) $result[0]->id;
+            
+            // Log succesvolle creatie
+            Log::info('CreateAfspraak SUCCESS', [
+                'afspraak_id' => $afspraakId,
+                'patient_id' => $data['patientid'],
+                'medewerker_id' => $data['medewerkerid'],
+                'datum' => $data['datum'],
+                'tijd' => $data['tijd'],
+                'status' => $data['status'] ?? 'Bevestigd'
+            ]);
+
+            return $afspraakId;
 
         } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('CreateAfspraak fout: ' . $e->getMessage());
+            Log::error('CreateAfspraak FAILED: ' . $e->getMessage(), [
+                'data' => $data,
+                'trace' => $e->getTraceAsString()
+            ]);
             return null;
         }
     }

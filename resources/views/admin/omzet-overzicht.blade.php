@@ -11,6 +11,32 @@
         </a>
     </div>
 
+    {{-- Datum Filter --}}
+    <div class="card mb-4">
+        <div class="card-body">
+            <form action="{{ route('admin.omzet.bekijken') }}" method="GET" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label for="start_datum" class="form-label">Van Datum</label>
+                    <input type="date" id="start_datum" name="start_datum" class="form-control" 
+                        value="{{ request('start_datum', date('Y-m-01')) }}" required>
+                </div>
+                <div class="col-md-4">
+                    <label for="eind_datum" class="form-label">Tot Datum</label>
+                    <input type="date" id="eind_datum" name="eind_datum" class="form-control" 
+                        value="{{ request('eind_datum', date('Y-m-t')) }}" required>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-search me-2"></i>Filteren
+                    </button>
+                    <a href="{{ route('admin.omzet.bekijken') }}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Reset
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
     {{-- Omzet Cards --}}
     <div class="row g-3 mb-4">
         <div class="col-md-4">
