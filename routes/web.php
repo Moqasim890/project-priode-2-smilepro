@@ -42,6 +42,14 @@ Route::middleware(['auth', 'role:Praktijkmanagement'])->prefix('admin')->group(f
     // Afspraken overzicht
     Route::get('/afspraken-overzicht', [DashboardController::class, 'afsprakenOverzicht'])->name('admin.afspraken.overzicht');
     
+    // Afspraken CRUD (same as medewerker)
+    Route::get('/afspraken', [AfspraakController::class, 'index'])->name('admin.afspraken.index');
+    Route::get('/afspraken/nieuw', [AfspraakController::class, 'create'])->name('admin.afspraken.create');
+    Route::post('/afspraken', [AfspraakController::class, 'store'])->name('admin.afspraken.store');
+    Route::get('/afspraken/{id}/bewerken', [AfspraakController::class, 'edit'])->name('admin.afspraken.edit');
+    Route::put('/afspraken/{id}', [AfspraakController::class, 'update'])->name('admin.afspraken.update');
+    Route::delete('/afspraken/{id}', [AfspraakController::class, 'destroy'])->name('admin.afspraken.destroy');
+    
     // Omzet overzicht
     Route::get('/omzet-overzicht', [DashboardController::class, 'omzetOverzicht'])->name('admin.omzet.overzicht');
     

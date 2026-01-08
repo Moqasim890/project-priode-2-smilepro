@@ -29,10 +29,22 @@
                                     <i class="bi bi-speedometer2 me-1"></i>Dashboard
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('admin.afspraken.overzicht') }}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                                     <i class="bi bi-calendar-week me-1"></i>Afspraken
                                 </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{{ route('admin.afspraken.index') }}">
+                                        <i class="bi bi-list me-1"></i>Alle Afspraken
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.afspraken.create') }}">
+                                        <i class="bi bi-plus-circle me-1"></i>Nieuwe Afspraak
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.afspraken.overzicht') }}">
+                                        <i class="bi bi-graph-up me-1"></i>Statistieken
+                                    </a></li>
+                                </ul>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('admin.omzet.overzicht') }}">
