@@ -1,36 +1,26 @@
-{{--
-    Master Layout Template
-    Doel: Hoofdlayout voor alle paginas met navigatie, footer en modals
-    Features:
-        - Responsive navbar met offcanvas op mobiel
-        - Rol-gebaseerde navigatie (Praktijkmanagement, Tandarts, Mondhygiënist, Assistent)
-        - Success/error modals voor gebruikersfeedback
-        - Bootstrap 5.3.3 styling
---}}
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
-
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'smilemore') }}</title>
-
+    <title>{{ config('app.name', 'SmilePro') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body class="min-vh-100 d-flex flex-column">
-
-    {{-- NAVBAR --}}
     <nav class="navbar navbar-dark bg-dark sticky-top navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">SmilePro</a>
+            <a class="navbar-brand fw-bold" href="{{ url('/') }}">
+                <i class="bi bi-emoji-smile me-1"></i>SmilePro
+            </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
                     @auth
                             {{-- Show role-based dashboard links --}}
                             @if(auth()->user()->hasRole('Praktijkmanagement'))
@@ -55,27 +45,69 @@
                                 </li>
                             @endif
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('adminn.dashboard') }}">
-                                <i class="bi bi-speedometer2 me-1"></i>Dashboard
+                            <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
+                                <i class="bi bi-house me-1"></i>Dashboard
                             </a>
                         </li>
+
+                        {{-- Afspraken --}}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('afspraken.index') }}">
+                            <a class="nav-link" href="{{ route('medewerker.afspraken.index') }}">
                                 <i class="bi bi-calendar-check me-1"></i>Afspraken
                             </a>
                         </li>
+
+                        {{-- Patiënten --}}
                         <li class="nav-item">
-                            <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                                @csrf
-                                <button type="submit" class="nav-link btn btn-link">Uitloggen</button>
-                            </form>
+                            <a class="nav-link" href="{{ route('admin.patienten.index') }}">
+                                <i class="bi bi-people me-1"></i>Patiënten
+                            </a>
+                        </li>
+
+                        {{-- Facturen --}}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('medewerker.factuur.index') }}">
+                                <i class="bi bi-receipt me-1"></i>Facturen
+                            </a>
+                        </li>
+
+                        {{-- Divider --}}
+                        <li class="nav-item d-none d-lg-block">
+                            <span class="nav-link text-secondary">|</span>
+                        </li>
+
+                        {{-- User Dropdown --}}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle me-1"></i>{{ auth()->user()->name }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('profile') }}">
+                                        <i class="bi bi-person me-1"></i>Profiel
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="bi bi-box-arrow-right me-1"></i>Uitloggen
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
                         </li>
                     @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Inloggen</a>
+                            <a class="nav-link" href="{{ route('login') }}">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>Inloggen
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">Registreren</a>
+                            <a class="btn btn-primary btn-sm" href="{{ route('register') }}">
+                                <i class="bi bi-person-plus me-1"></i>Registreren
+                            </a>
                         </li>
                     @endauth
                 </ul>
@@ -85,79 +117,33 @@
 
     {{-- MAIN CONTENT --}}
     <main class="flex-grow-1">
+        {{-- Flash Messages --}}
+        @if(session('success'))
+        <div class="container mt-3">
+            <div class="alert alert-success alert-dismissible fade show">
+                <i class="bi bi-check-circle me-1"></i>{{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="container mt-3">
+            <div class="alert alert-danger alert-dismissible fade show">
+                <i class="bi bi-exclamation-circle me-1"></i>{{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+        @endif
+
         @yield('content')
     </main>
 
     {{-- FOOTER --}}
-    <footer class="py-4 border-top bg-body">
-        <div class="container d-flex flex-column flex-lg-row justify-content-between align-items-center gap-2">
-            <small>© {{ date('Y') }} SmilePro - tandheelkunde pratijk</small>
-            <div class="d-flex gap-3">
-                <a href="{{ url('/info') }}">Praktische info</a>
-                <a href="{{ url('/contact') }}">Contact</a>
-                <a href="{{ url('/privacy') }}">Privacy</a>
-            </div>
+    <footer class="py-4 border-top bg-light mt-auto">
+        <div class="container text-center">
+            <small class="text-muted">© {{ date('Y') }} SmilePro - Tandheelkunde Praktijk</small>
         </div>
     </footer>
-
-
-    <!-- Success Modal -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
-        data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title"><i class="bi bi-check-circle-fill me-2"></i>Gelukt!</h5>
-                </div>
-                <div class="modal-body text-center py-4">
-                    <i class="bi bi-check-circle text-success" style="font-size: 4rem;"></i>
-                    <h4 class="mt-3" id="successMessage">{{ session('success') }}</h4>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Error Modal -->
-    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
-        data-bs-keyboard="false">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-2"></i>Fout</h5>
-                </div>
-                <div class="modal-body text-center py-4">
-                    <i class="bi bi-x-circle text-danger" style="font-size: 4rem;"></i>
-                    <h4 class="mt-3" id="errorMessage">{{ session('error') }}</h4>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Bootstrap JS Bundle (includes Popper) --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    {{-- Page-specific scripts --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Show success modal if there's a success message
-            @if(session('success'))
-                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
-            @endif
-
-            // Show error modal if there's an error message
-            @if(session('error'))
-                const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-                errorModal.show();
-            @endif
-        });
-    </script>
 </body>
-
 </html>

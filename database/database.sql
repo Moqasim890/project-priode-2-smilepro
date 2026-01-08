@@ -1,5 +1,22 @@
--- Active: 1764442526270@@127.0.0.1@3333@tandarts
--- Zorg dat we schone lei hebben (drop in juiste volgorde)
+-- Active: 1764442526270@@127.0.0.1@3333@smilepro
+-- =========================================
+-- SMILEPRO DATABASE SETUP
+-- Versie: 1.0
+-- Datum: 2026-01-04
+-- =========================================
+
+-- =========================================
+-- DATABASE AANMAKEN
+-- =========================================
+CREATE DATABASE IF NOT EXISTS smilepro
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE smilepro;
+
+-- =========================================
+-- TABELLEN VERWIJDEREN (schone lei)
+-- =========================================
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS feedback;
 
