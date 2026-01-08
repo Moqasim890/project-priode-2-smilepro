@@ -8,6 +8,12 @@ use App\Models\AfspraakModel as Afspraak;
 
 class AfspraakController extends Controller
 {
+    /** Determine route name prefix based on current scope (admin vs medewerker). */
+    private function routePrefix(): string
+    {
+        return request()->routeIs('admin.*') ? 'admin.afspraken' : 'medewerker.afspraken';
+    }
+
     /**
      * Toon afspraken overzicht.
      */
@@ -41,7 +47,7 @@ class AfspraakController extends Controller
 
         } catch (\Exception $e) {
             Log::error('AfspraakController@create: ' . $e->getMessage());
-            return redirect()->route('medewerker.afspraken.index')
+            return redirect()->route($this->routePrefix() . '.index')
                 ->with('error', 'Fout bij laden formulier.');
         }
     }
@@ -95,7 +101,7 @@ class AfspraakController extends Controller
             $afspraakId = Afspraak::CreateAfspraak($validated);
 
             if ($afspraakId) {
-                return redirect()->route('medewerker.afspraken.index')
+                return redirect()->route($this->routePrefix() . '.index')
                     ->with('success', 'Afspraak succesvol aangemaakt!');
             }
 

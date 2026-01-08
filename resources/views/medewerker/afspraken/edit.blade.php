@@ -1,12 +1,20 @@
 @extends('layout.app')
 
 @section('content')
+@php(
+    $isAdmin = request()->routeIs('admin.*');
+    $afsprakenPrefix = $isAdmin ? 'admin.afspraken' : 'medewerker.afspraken';
+    $indexRoute = $afsprakenPrefix . '.index';
+    $updateRoute = $afsprakenPrefix . '.update';
+    $destroyRoute = $afsprakenPrefix . '.destroy';
+)
+
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 fw-bold">
             <i class="bi bi-pencil-square me-2"></i>Afspraak Bewerken
         </h1>
-        <a href="{{ route('medewerker.afspraken.index') }}" class="btn btn-outline-secondary">
+        <a href="{{ route($indexRoute) }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i>Terug
         </a>
     </div>
@@ -20,7 +28,7 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
-            <form action="{{ route('medewerker.afspraken.update', $afspraak->id) }}" method="POST">
+            <form action="{{ route($updateRoute, $afspraak->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -110,7 +118,7 @@
                         <i class="bi bi-trash me-1"></i>Verwijderen
                     </button>
                     <div>
-                        <a href="{{ route('medewerker.afspraken.index') }}" class="btn btn-outline-secondary me-2">Annuleren</a>
+                        <a href="{{ route($indexRoute) }}" class="btn btn-outline-secondary me-2">Annuleren</a>
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-lg me-1"></i>Opslaan
                         </button>
@@ -134,7 +142,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                <form action="{{ route('medewerker.afspraken.destroy', $afspraak->id) }}" method="POST" class="d-inline">
+                <form action="{{ route($destroyRoute, $afspraak->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger">Verwijderen</button>

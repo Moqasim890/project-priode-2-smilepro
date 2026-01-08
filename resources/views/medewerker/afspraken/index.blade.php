@@ -19,6 +19,12 @@
 @section('title', 'Afspraken Beheren')
 
 @section('content')
+@php(
+    $isAdmin = request()->routeIs('admin.*');
+    $afsprakenPrefix = $isAdmin ? 'admin.afspraken' : 'medewerker.afspraken';
+    $dashboardRoute = $isAdmin ? 'admin.dashboard' : 'medewerker.dashboard';
+)
+
 <div class="container py-4">
     {{-- Header met titel en acties - BOVENAAN --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -26,10 +32,10 @@
             <i class="bi bi-calendar-check me-2"></i>Afspraken Beheren
         </h1>
         <div>
-            <a href="{{ route('medewerker.afspraken.create') }}" class="btn btn-primary">
+            <a href="{{ route($afsprakenPrefix . '.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-lg me-1"></i> Nieuwe Afspraak
             </a>
-            <a href="{{ route('medewerker.dashboard') }}" class="btn btn-secondary ms-2">
+            <a href="{{ route($dashboardRoute) }}" class="btn btn-secondary ms-2">
                 <i class="bi bi-arrow-left"></i> Terug
             </a>
         </div>
@@ -242,7 +248,7 @@
                                     <div class="text-muted">
                                         <i class="bi bi-calendar-x fs-1 d-block mb-3"></i>
                                         <p class="mb-2">Er zijn momenteel geen afspraken</p>
-                                        <a href="{{ route('medewerker.afspraken.create') }}" class="btn btn-primary btn-sm">
+                                        <a href="{{ route($afsprakenPrefix . '.create') }}" class="btn btn-primary btn-sm">
                                             <i class="bi bi-plus-lg me-1"></i> Nieuwe Afspraak Maken
                                         </a>
                                     </div>

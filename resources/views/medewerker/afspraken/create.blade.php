@@ -41,13 +41,20 @@
 @section('title', 'Nieuwe Afspraak')
 
 @section('content')
+@php(
+    $isAdmin = request()->routeIs('admin.*');
+    $afsprakenPrefix = $isAdmin ? 'admin.afspraken' : 'medewerker.afspraken';
+    $indexRoute = $afsprakenPrefix . '.index';
+    $storeRoute = $afsprakenPrefix . '.store';
+)
+
 <div class="container py-4">
     {{-- Header bovenaan --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2 fw-bold">
             <i class="bi bi-calendar-plus me-2"></i>Nieuwe Afspraak
         </h1>
-        <a href="{{ route('medewerker.afspraken.index') }}" class="btn btn-outline-secondary">
+        <a href="{{ route($indexRoute) }}" class="btn btn-outline-secondary">
             <i class="bi bi-arrow-left me-1"></i> Terug
         </a>
     </div>
@@ -69,7 +76,7 @@
                     <h5 class="mb-0"><i class="bi bi-clipboard-plus me-2"></i>Afspraak Gegevens</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('medewerker.afspraken.store') }}" method="POST">
+                    <form action="{{ route($storeRoute) }}" method="POST">
                         @csrf
 
                         {{-- Patiënt Selectie --}}
