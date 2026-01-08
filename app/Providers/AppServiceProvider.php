@@ -38,13 +38,18 @@ class AppServiceProvider extends ServiceProvider
          * 4. Zet het resultaat om naar string zodat Blade het correct kan renderen.
         */
         View::composer('layout.*', function ($view) {
-            if (Auth::check()) {
-                $userid          = Auth::Id();
-                $id              = Patient::SP_GetPatientIdByUserId($userid);
-                $result          = Patient::SP_CountBerichtenById($id);
-                $aantalberichten = (string) $result[0]->AantalBerichten;
-            } else {
-                $aantalberichten = "0";
+            $aantalberichten = "0";
+            
+            if (Auth::check() && Auth::user()->hasRole('Patiënt')) {
+                $userid = Auth::Id();
+                $id     = Patient::SP_GetPatientIdByUserId($userid);
+                
+                if ($id) {
+                    $result = Patient::SP_CountBerichtenById($id);
+                    if (!empty($result) && isset($result[0]->AantalBerichten)) {
+                        $aantalberichten = (string) $result[0]->AantalBerichten;
+                    }
+                }
             }
             
             $view->with('aantalberichten', $aantalberichten);
