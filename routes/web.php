@@ -74,8 +74,8 @@ Route::middleware(['auth', 'role:Patiënt'])->prefix('patient')->group(function 
     Route::post('/berichten', [App\Http\Controllers\PatientController::class, 'store'])->name('Patient.berichten.store');
 });
 
-// Medewerker routes - For Tandarts, Mondhygiënist, Assistent
-Route::middleware(['auth', 'role:Tandarts,Mondhygiënist,Assistent'])->prefix('medewerker')->group(function () {
+// Medewerker routes - For Tandarts, Mondhygiënist, Assistent (Praktijkmanagement mag ook)
+Route::middleware(['auth', 'role:Praktijkmanagement,Tandarts,Mondhygiënist,Assistent'])->prefix('medewerker')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'medewerkerDashboard'])->name('medewerker.dashboard');
     
