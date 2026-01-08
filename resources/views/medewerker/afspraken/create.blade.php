@@ -41,12 +41,12 @@
 @section('title', 'Nieuwe Afspraak')
 
 @section('content')
-@php(
+@php
     $isAdmin = request()->routeIs('admin.*');
     $afsprakenPrefix = $isAdmin ? 'admin.afspraken' : 'medewerker.afspraken';
     $indexRoute = $afsprakenPrefix . '.index';
     $storeRoute = $afsprakenPrefix . '.store';
-)
+@endphp
 
 <div class="container py-4">
     {{-- Header bovenaan --}}

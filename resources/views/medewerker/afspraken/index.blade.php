@@ -19,11 +19,11 @@
 @section('title', 'Afspraken Beheren')
 
 @section('content')
-@php(
+@php
     $isAdmin = request()->routeIs('admin.*');
     $afsprakenPrefix = $isAdmin ? 'admin.afspraken' : 'medewerker.afspraken';
     $dashboardRoute = $isAdmin ? 'admin.dashboard' : 'medewerker.dashboard';
-)
+@endphp
 
 <div class="container py-4">
     {{-- Header met titel en acties - BOVENAAN --}}
