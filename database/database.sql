@@ -1,5 +1,22 @@
--- Active: 1764442526270@@127.0.0.1@3333@tandarts
--- Zorg dat we schone lei hebben (drop in juiste volgorde)
+-- Active: 1764442526270@@127.0.0.1@3333@smilepro
+-- =========================================
+-- SMILEPRO DATABASE SETUP
+-- Versie: 1.0
+-- Datum: 2026-01-04
+-- =========================================
+
+-- =========================================
+-- DATABASE AANMAKEN
+-- =========================================
+CREATE DATABASE IF NOT EXISTS smilepro
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE smilepro;
+
+-- =========================================
+-- TABELLEN VERWIJDEREN (schone lei)
+-- =========================================
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS feedback;
 
@@ -198,7 +215,7 @@ CREATE TABLE communicatie (
     patientid INT NOT NULL,
     medewerkerid INT,
     bericht TEXT NOT NULL,
-    verzonden_datum DATETIME NOT NULL,
+    verzonden_datum DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     isactief TINYINT(1) DEFAULT 1,
     opmerking TEXT,
     datumaangemaakt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -370,7 +387,7 @@ INSERT INTO persoon (gebruikerid, voornaam, tussenvoegsel, achternaam, geboorted
 (NULL, 'David', 'van der', 'Berg', '1982-06-25', 1);
 
 -- Patienten (gebruik de zojuist aangemaakte personen, skip de eerste 5 test users)
-INSERT INTO patient (persoonid, nummer, medischdossier, isactief) 
+INSERT INTO patient (persoonid, nummer, opmerking, isactief) 
 SELECT id, CONCAT('P', LPAD(id - 5, 5, '0')), 
     CASE 
         WHEN voornaam = 'Jan' THEN 'Regelmatige controles, geen bijzonderheden'
@@ -538,4 +555,3 @@ SELECT
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
 WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt');
-

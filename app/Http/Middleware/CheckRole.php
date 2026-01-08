@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckRole
@@ -16,13 +17,13 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return redirect()->route('login')->with('error', 'Je moet ingelogd zijn om deze pagina te bekijken.');
         }
 
-        $user = auth()->user();
+        $user = Auth::user();
 
-        if (!$user->hasAnyRole($roles)) {
+        if (!$user || !$user->hasAnyRole($roles)) {
             abort(403, 'Je hebt geen toegang tot deze pagina.');
         }
 

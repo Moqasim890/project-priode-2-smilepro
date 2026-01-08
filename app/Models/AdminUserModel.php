@@ -97,11 +97,11 @@ class AdminUserModel extends Model
             
             // Voer stored procedure uit
             $result = DB::select("CALL SP_GetAllPatienten()");
-            
+
             // Log succesvol resultaat
             Log::info('SP_GetAllPatienten succesvol');
             
-            return $result;
+            return $result ?? [];
         } catch (\Throwable $e) {
             // Log dat er een fout was
             Log::error('SP_GetAllPatienten mislukt');
@@ -110,4 +110,101 @@ class AdminUserModel extends Model
             return [];
         }
     } 
+
+    /**
+     * Haal alle Feedback
+     */
+    static public function SP_GetAllFeedback(){
+        try {
+            // Log de aanroep
+            Log::info('SP_GetAllFeedback uitgevoerd');
+            
+            // Voer stored procedure uit
+            $result = DB::select("CALL SP_GetAllFeedback()");
+            
+            // Log succesvol resultaat
+            Log::info('SP_GetAllFeedback succesvol');
+            
+            return $result ?? [];
+        } catch (\Throwable $e) {
+            // Log dat er een fout was
+            Log::error('SP_GetAllFeedback mislukt');
+            
+            // Return lege array bij fout zodat de applicatie blijft werken
+            return [];
+        }
+    } 
+
+    static public function SP_GetAllBerichten(){
+        try {
+            // Log de aanroep
+            Log::info('SP_GetAllBerichten uitgevoerd');
+            
+            // Voer stored procedure uit
+            $result = DB::select("CALL SP_GetAllBerichten()");
+            
+            // Log succesvol resultaat
+            Log::info('SP_GetAllBerichten succesvol');
+            
+            return $result ?? [];
+        } catch (\Throwable $e) {
+            // Log dat er een fout was
+            Log::error('SP_GetAllBerichten mislukt');
+            
+            // Return lege array bij fout zodat de applicatie blijft werken
+            return [];
+        }
+    } 
+
+    static public function SP_CreateBericht($data)
+    {
+        try {
+            // Log de aanroep
+            Log::info('SP_CreateBericht uitgevoerd');
+
+            // Voer stored procedure uit
+            DB::select('CALL SP_CreateBericht(?, ?, ?)', [
+                $data['patientid'],
+                $data['medewerkerid'],
+                $data['bericht']
+            ]);
+
+            // Log succesvol
+            Log::info('SP_CreateBericht succesvol');
+
+            return $result ?? [];
+        } catch (\Throwable $e) {
+            // Log dat er een fout was
+            Log::info('SP_CreateBericht niet succesvol uitgevoerd');
+
+            // Return lege array bij fout zodat de applicatie blijft werken
+            return [];
+        }
+    }
+
+    static public function SP_GetPatientidByEmail($email)
+    {
+        try {
+            // Log de aanroep
+            Log::info('SP_GetPatientidByEmail uitgevoerd');
+
+            // Voer stored procedure uit
+            $result = DB::selectOne('CALL SP_GetPatientidByEmail(?)', [$email]);
+
+            // Log succesvol
+            Log::info('SP_GetPatientidByEmail succesvol');
+
+            return $result;
+        } catch (\Throwable $e) {
+            // Log de fout met volledige details
+            Log::error('SP_CountAllUsers mislukt', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+
+            // Return lege array bij fout zodat de applicatie blijft werken
+            return NULL;
+        }
+    }
 }

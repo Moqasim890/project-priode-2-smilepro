@@ -150,6 +150,22 @@
                     </form>
                 </div>
             </div>
+
+            {{-- Logout Section --}}
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0 text-danger">Account Acties</h5>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-3">Wilt u uitloggen of uw account beheren?</p>
+                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-box-arrow-right me-1"></i>Uitloggen
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
