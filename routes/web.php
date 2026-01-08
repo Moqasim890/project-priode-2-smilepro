@@ -5,9 +5,10 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\AfspraakController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\FactuurController;
+use App\Http\Controllers\AfspraakController;
+use App\Http\Controllers\PatientController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
