@@ -34,8 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/profiel/wachtwoord', [ProfileController::class, 'updatePassword'])->name('profile.password');
 });
 
-// Praktijkmanagement routes (Admin)
-Route::middleware(['auth'])->prefix('admin')->group(function () {
+// Praktijkmanagement routes (Admin) - Only for Praktijkmanagement role
+Route::middleware(['auth', 'role:Praktijkmanagement'])->prefix('admin')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
     
@@ -66,8 +66,8 @@ Route::middleware(['auth', 'role:Patiënt'])->prefix('patient')->group(function 
     Route::post('/berichten', [App\Http\Controllers\PatientController::class, 'store'])->name('Patient.berichten.store');
 });
 
-// Medewerker routes
-Route::middleware(['auth'])->prefix('medewerker')->group(function () {
+// Medewerker routes - For Tandarts, Mondhygiënist, Assistent
+Route::middleware(['auth', 'role:Tandarts,Mondhygiënist,Assistent'])->prefix('medewerker')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'medewerkerDashboard'])->name('medewerker.dashboard');
     
