@@ -1,11 +1,11 @@
 {{--
-    Master Layout Template
-    Doel: Hoofdlayout voor alle paginas met navigatie, footer en modals
-    Features:
-        - Responsive navbar met offcanvas op mobiel
-        - Rol-gebaseerde navigatie (Praktijkmanagement, Tandarts, Mondhygiënist, Assistent)
-        - Success/error modals voor gebruikersfeedback
-        - Bootstrap 5.3.3 styling
+Master Layout Template
+Doel: Hoofdlayout voor alle paginas met navigatie, footer en modals
+Features:
+- Responsive navbar met offcanvas op mobiel
+- Rol-gebaseerde navigatie (Praktijkmanagement, Tandarts, Mondhygiënist, Assistent)
+- Success/error modals voor gebruikersfeedback
+- Bootstrap 5.3.3 styling
 --}}
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -32,23 +32,22 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     @auth
+                        {{-- Show role-based dashboard links --}}
+                        @if(auth()->user()->hasRole('Praktijkmanagement'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                                    <i class="bi bi-speedometer2 me-1"></i>Management Dashboard
+                                </a>
+                            </li>
+                        @endif
+                        @if(auth()->user()->hasAnyRole(['Praktijkmanagement', 'Tandarts', 'Mondhygiënist', 'Assistent']))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
+                                    <i class="bi bi-briefcase me-1"></i>Medewerker Dashboard
+                                </a>
+                            </li>
+                        @endif
 
-                                                        {{-- Show role-based dashboard links --}}
-                                @if(auth()->user()->hasRole('Praktijkmanagement'))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('admin.dashboard') }}">
-                                            <i class="bi bi-speedometer2 me-1"></i>Management Dashboard
-                                        </a>
-                                    </li>
-                                @endif
-                                @if(auth()->user()->hasAnyRole(['Praktijkmanagement', 'Tandarts', 'Mondhygiënist', 'Assistent']))
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
-                                            <i class="bi bi-briefcase me-1"></i>Medewerker Dashboard
-                                        </a>
-                                    </li>
-                                @endif
-                                
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('adminn.dashboard') }}">
                                 <i class="bi bi-speedometer2 me-1"></i>Dashboard
@@ -139,18 +138,18 @@
 
     {{-- Page-specific scripts --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Show success modal if there's a success message
             @if(session('success'))
                 const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
             @endif
 
-            // Show error modal if there's an error message
-            @if(session('error'))
-                const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-                errorModal.show();
-            @endif
+                // Show error modal if there's an error message
+                @if(session('error'))
+                    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                    errorModal.show();
+                @endif
         });
     </script>
 </body>

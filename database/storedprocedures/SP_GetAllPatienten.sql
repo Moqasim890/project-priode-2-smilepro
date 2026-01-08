@@ -1,7 +1,10 @@
+USE tandarts;
+
+DROP PROCEDURE IF EXISTS SP_GetAllPatienten;
+
 DELIMITER $$
 
-DROP PROCEDURE IF EXISTS SP_GetAllPatienten $$
-CREATE PROCEDURE SP_GetAllPatienten ()
+CREATE PROCEDURE SP_GetAllPatienten()
 BEGIN
     SELECT
         p.persoonid,
@@ -14,7 +17,9 @@ BEGIN
     JOIN users AS u ON p.persoonid = u.id
     JOIN role_user AS ru ON ru.user_id = u.id
     JOIN roles AS r ON r.id = ru.role_id
-    WHERE r.name = 'klant';
+    WHERE r.name = 'Patiënt';
 END $$
 
 DELIMITER ;
+
+CALL SP_GetAllPatienten();

@@ -17,7 +17,7 @@ Route::get('/', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [LoginController::class, 'login']);
-    
+
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('/register', [RegisterController::class, 'register']);
 });
@@ -25,7 +25,7 @@ Route::middleware('guest')->group(function () {
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
-    
+
     // Profile routes
     Route::get('/profiel', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profiel', [ProfileController::class, 'update'])->name('profile.update');
@@ -36,13 +36,13 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:Praktijkmanagement'])->prefix('management')->group(function () {
     Route::get('/management/shboard', [Managementdashboard::class, 'index'])->name('adminn.dashboard');
 
-        Route::get('/dashboard', function () { 
+    Route::get('/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('admin.users.index');
     Route::get('/patienten', [App\Http\Controllers\AdminController::class, 'patienten'])->name('admin.patienten.index');
-    
+
     // Afspraken routes
     Route::get('/afspraken', [AfsprakenController::class, 'index'])->name('afspraken.index');
 });
@@ -56,4 +56,9 @@ Route::middleware(['auth', 'role:Praktijkmanagement,Tandarts,Mondhygiënist,Assi
 
 
     Route::get('/facturen', [App\Http\Controllers\FactuurController::class, 'index'])->name('medewerker.factuur.index');
+    Route::get('/facturen/create', [App\Http\Controllers\FactuurController::class, 'create'])->name('medewerker.factuur.create');
+    Route::put('/facturen/store', [App\Http\Controllers\FactuurController::class, 'store'])->name('medewerker.factuur.store');
+    Route::get('/facturen/edit', [App\Http\Controllers\FactuurController::class, 'edit'])->name('medewerker.factuur.edit');
+    Route::patch('/facturen/update', [App\Http\Controllers\FactuurController::class, 'update'])->name('medewerker.factuur.update');
+    Route::get('/factuur/behandelingen/{patientId}', [App\Http\Controllers\FactuurController::class, 'Getbehandelingen'])->name('medewerker.behandeling.api');
 });
