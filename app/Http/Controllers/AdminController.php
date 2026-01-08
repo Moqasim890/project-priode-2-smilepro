@@ -144,7 +144,7 @@ class AdminController extends Controller
     static public function GetPatientidByEmail($email)
     {
         $id = User::SP_GetPatientidByEmail($email);
-
+        
         if(!empty($id)) {
             return $id;
         } else {
@@ -173,7 +173,7 @@ class AdminController extends Controller
 
         $data['medewerkerid'] = NULL; // Moet eigenlijk -> Auth::Id(); maar er zijn geen medewerkers en praktijkmanagement is blijkbaar geen medewerker
 
-        $data['patientid'] = Self::GetPatientidByEmail($data['email']);
+        $data['patientid'] = Self::GetPatientidByEmail($data['email'])->id;
 
 
         // dd($data['patientid']);
@@ -187,6 +187,8 @@ class AdminController extends Controller
                 ->route('admin.berichten.index')
                 ->with('error', 'Deze gebruiker bestaat niet, check of je de email wel correct hebt ingevoerd.');
         }
+
+        // dd($data);
 
         User::SP_CreateBericht($data);
 

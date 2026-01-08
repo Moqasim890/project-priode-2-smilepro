@@ -194,13 +194,17 @@ class AdminUserModel extends Model
             // Log succesvol
             Log::info('SP_GetPatientidByEmail succesvol');
 
-            return $result?->patientid;
+            return $result;
         } catch (\Throwable $e) {
-            // Log dat er een fout was
-            Log::info('SP_GetPatientidByEmail niet succesvol uitgevoerd');
+            // Log de fout met volledige details
+            Log::error('SP_CountAllUsers mislukt', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
 
             // Return lege array bij fout zodat de applicatie blijft werken
-            return "er is iets fout gegaan";
+            return NULL;
         }
     }
 }
