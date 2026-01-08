@@ -173,7 +173,14 @@ class AdminController extends Controller
 
         $data['medewerkerid'] = NULL; // Moet eigenlijk -> Auth::Id(); maar er zijn geen medewerkers en praktijkmanagement is blijkbaar geen medewerker
 
-        $data['patientid'] = Self::GetPatientidByEmail($data['email'])->id;
+        // Haal patientid op; als niet gevonden -> terug met foutmelding
+        $patient = Self::GetPatientidByEmail($data['email']);
+        if (!$patient || !isset($patient->id)) {
+            return redirect()
+                ->route('admin.berichten.index')
+                ->with('error', 'Deze gebruiker bestaat niet, check of je de email wel correct hebt ingevoerd.');
+        }
+        $data['patientid'] = $patient->id;
 
 
         // dd($data['patientid']);
@@ -182,11 +189,7 @@ class AdminController extends Controller
             $data['medewerkerid'] = NULL;
         }
 
-        if ($data['patientid'] === NULL) {
-            return redirect()
-                ->route('admin.berichten.index')
-                ->with('error', 'Deze gebruiker bestaat niet, check of je de email wel correct hebt ingevoerd.');
-        }
+        // patientid is gegarandeerd gezet hierboven
 
         // dd($data);
 
