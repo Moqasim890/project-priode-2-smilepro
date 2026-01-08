@@ -105,6 +105,34 @@ class AdminController extends Controller
         ]);
     }
 
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function createPatient()
+    {
+        return view('admin.patienten.create');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function storePatient(Request $request)
+    {
+        $data = $request->validate([
+             'persoonid'     => 'required'
+            ,'nummer'        => 'required'
+            ,'medischdosier' => 'nullable|file'
+            ,'opmerking'     => 'nullable|string|max:255'
+        ]);
+
+        User::SP_CreatePatient($data);
+
+        return redirect()
+                ->route('admin.patienten.create')
+                ->with('success', 'Patient succesvol aangemaakt.');
+    }
+
     /**
      * Show the form for creating a new resource.
      */

@@ -11,35 +11,15 @@
 		</a>
 	</div>
 
-	@if(session('success'))
-		<div class="alert alert-success">{{ session('success') }}</div>
-	@endif
-	
-    {{-- <div class="row g-0 mb-4">
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card border-0 shadow-sm h-100 hover-lift">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <p class="text-muted mb-2 small text-uppercase fw-semibold">Totaal Afspraken</p>
-                            <h2 class="mb-0 fw-bold">add info later</h2>
-                        </div>
-                        <div class="bg-primary bg-opacity-10 rounded-3 p-3">
-                            <i class="bi bi-calendar-check text-primary fs-3"></i>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-2 py-1">
-                            <i class="bi bi-arrow-up-short"></i> Actieve afspraken
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-	</div> --}}
-	<div class="p-3" style="max-height: 400px; overflow-y:auto;">
+    <div class="mb-2">
+        <a href="{{ route('admin.patienten.create') }}" class="fs-5 text-decoration-none text-black border border-black rounded p-1">
+            <i class="bi bi-person-plus me-1 p-0"></i>Nieuwe patient toevoegen
+        </a>
+    </div>
+
+	<div class="border border-rounded p-4" style="max-height: 400px; overflow-y:auto;">
 		@forelse($patienten as $patient)
-			<div class="row d-flex flex-row mt-3 border border-black rounded p-2 h-100 mw-75">
+			<div class="row d-flex flex-row mt-2 border border-black rounded p-2 h-100 mw-75">
 				<div class="col-4">
 					<div class="mt-2">
 						<h4>{{ $patient->volledigeNaam }}</h4>

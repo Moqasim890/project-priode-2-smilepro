@@ -36,12 +36,14 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'role:Praktijkmanagement'])->prefix('management')->group(function () {
     Route::get('/management/shboard', [Managementdashboard::class, 'index'])->name('adminn.dashboard');
 
-        Route::get('/dashboard', function () { 
+    Route::get('/dashboard', function () { 
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
     Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('admin.users.index');
     Route::get('/patienten', [App\Http\Controllers\AdminController::class, 'patienten'])->name('admin.patienten.index');
+    Route::get('/patienten/create', [App\Http\Controllers\AdminController::class, 'createPatient'])->name('admin.patienten.create');
+    Route::post('/patienten', [App\Http\Controllers\AdminController::class, 'store'])->name('admin.patienten.store');
     Route::get('/feedback', [App\Http\Controllers\AdminController::class, 'feedback'])->name('admin.feedback.index');
     Route::get('/berichten', [App\Http\Controllers\AdminController::class, 'berichten'])->name('admin.berichten.index');
     Route::get('/berichten/create', [App\Http\Controllers\AdminController::class, 'create'])->name('admin.berichten.create');
