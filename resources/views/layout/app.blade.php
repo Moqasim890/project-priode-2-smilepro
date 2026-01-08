@@ -22,54 +22,57 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
                     @auth
-                            {{-- Show role-based dashboard links --}}
-                            @if(auth()->user()->hasRole('Praktijkmanagement'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('admin.dashboard') }}">
-                                        <i class="bi bi-speedometer2 me-1"></i>Management Dashboard
-                                    </a>
-                                </li>
-                            @endif
-                            @if(auth()->user()->hasAnyRole(['Praktijkmanagement', 'Tandarts', 'Mondhygiënist', 'Assistent']))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
-                                        <i class="bi bi-briefcase me-1"></i>Medewerker Dashboard
-                                    </a>
-                                </li>
-                            @endif
-                            @if(auth()->user()->hasAnyRole(['Patiënt']))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('Patient.berichten.index') }}">
-                                        <i class="bi bi-bell me-1"></i>{{ $aantalberichten }} Meldingen
-                                    </a>
-                                </li>
-                            @endif
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
-                                <i class="bi bi-house me-1"></i>Dashboard
-                            </a>
-                        </li>
+                        {{-- Show role-based dashboard links --}}
+                        @if(auth()->user()->hasRole('Praktijkmanagement'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                                    <i class="bi bi-speedometer2 me-1"></i>Management Dashboard
+                                </a>
+                            </li>
+                        @endif
+                        
+                        @if(auth()->user()->hasAnyRole(['Tandarts', 'Mondhygiënist', 'Assistent']))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
+                                    <i class="bi bi-briefcase me-1"></i>Medewerker Dashboard
+                                </a>
+                            </li>
+                        @endif
+                        
+                        @if(auth()->user()->hasRole('Patiënt'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('Patient.berichten.index') }}">
+                                    <i class="bi bi-bell me-1"></i>{{ $aantalberichten }} Meldingen
+                                </a>
+                            </li>
+                        @endif
 
-                        {{-- Afspraken --}}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('medewerker.afspraken.index') }}">
-                                <i class="bi bi-calendar-check me-1"></i>Afspraken
-                            </a>
-                        </li>
+                        {{-- Afspraken - For staff roles --}}
+                        @if(auth()->user()->hasAnyRole(['Tandarts', 'Mondhygiënist', 'Assistent']))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('medewerker.afspraken.index') }}">
+                                    <i class="bi bi-calendar-check me-1"></i>Afspraken
+                                </a>
+                            </li>
+                        @endif
 
-                        {{-- Patiënten --}}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.patienten.index') }}">
-                                <i class="bi bi-people me-1"></i>Patiënten
-                            </a>
-                        </li>
+                        {{-- Patiënten - For management --}}
+                        @if(auth()->user()->hasRole('Praktijkmanagement'))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('admin.patienten.index') }}">
+                                    <i class="bi bi-people me-1"></i>Patiënten
+                                </a>
+                            </li>
+                        @endif
 
-                        {{-- Facturen --}}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('medewerker.factuur.index') }}">
-                                <i class="bi bi-receipt me-1"></i>Facturen
-                            </a>
-                        </li>
+                        {{-- Facturen - For staff roles --}}
+                        @if(auth()->user()->hasAnyRole(['Tandarts', 'Mondhygiënist', 'Assistent']))
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('medewerker.factuur.index') }}">
+                                    <i class="bi bi-receipt me-1"></i>Facturen
+                                </a>
+                            </li>
+                        @endif
 
                         {{-- Divider --}}
                         <li class="nav-item d-none d-lg-block">
