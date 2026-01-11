@@ -1,15 +1,15 @@
--- Active: 1764442526270@@127.0.0.1@3333@smilepro_db
+-- Active: 1764442526270@@127.0.0.1@3333@tandarts_db
 USE tandarts;
 DROP PROCEDURE IF EXISTS SP_GetAllFacturen;
 DROP PROCEDURE IF EXISTS SP_GetAllTotaalbedragFacturen;
 DELIMITER $$
 
 CREATE PROCEDURE SP_GetAllFacturen(
-    IN limitVal INT, 
+    IN limitVal INT,
     IN offsetVal INT
 )
 BEGIN
-    SELECT 
+    SELECT
         fct.id,
         fct.nummer,
         fct.datum,
@@ -33,14 +33,16 @@ CREATE PROCEDURE SP_GetAllTotaalbedragFacturen(
 
 )
 BEGIN
-    SELECT 
+    SELECT
         SUM(fct.bedrag) AS totaalbedrag
         ,fct.status
+        ,COUNT(*) As aantal
     FROM factuur AS fct
     WHERE fct.isactief = 1
     GROUP BY fct.status;
 END $$
 DELIMITER ;
+
 
 CALL `SP_GetAllFacturen`(10, 0);
 

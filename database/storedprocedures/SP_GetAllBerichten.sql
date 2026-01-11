@@ -2,7 +2,8 @@ DELIMITER $$
 
 DROP PROCEDURE IF EXISTS SP_GetAllBerichten $$
 
-CREATE PROCEDURE SP_GetAllBerichten()
+CREATE PROCEDURE
+SP_GetAllBerichten()
 BEGIN
     SELECT
         comm.patientid,

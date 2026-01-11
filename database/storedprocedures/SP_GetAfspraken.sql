@@ -1,4 +1,4 @@
-USE smilepro;
+USE tandarts;
 
 -- =========================================
 -- STORED PROCEDURES VOOR AFSPRAKEN (GET)
@@ -18,11 +18,11 @@ DELIMITER $$
 -- Haalt alle afspraken op met patiënt en medewerker info
 -- =========================================
 CREATE PROCEDURE SP_GetAllAfspraken(
-    IN limitVal INT, 
+    IN limitVal INT,
     IN offsetVal INT
 )
 BEGIN
-    SELECT 
+    SELECT
         a.id,
         a.datum,
         a.tijd,
@@ -59,7 +59,7 @@ CREATE PROCEDURE SP_GetAfspraakById(
     IN afspraakId INT
 )
 BEGIN
-    SELECT 
+    SELECT
         a.id,
         a.datum,
         a.tijd,
@@ -90,7 +90,7 @@ END$$
 CREATE PROCEDURE SP_GetAfsprakenStatistieken()
 BEGIN
     -- Aantal afspraken vandaag
-    SELECT 
+    SELECT
         COUNT(*) AS totaal_afspraken,
         SUM(CASE WHEN datum = CURDATE() THEN 1 ELSE 0 END) AS afspraken_vandaag,
         SUM(CASE WHEN datum = CURDATE() + INTERVAL 1 DAY THEN 1 ELSE 0 END) AS afspraken_morgen,
@@ -107,7 +107,7 @@ END$$
 -- =========================================
 CREATE PROCEDURE SP_GetBeschikbareMedewerkers()
 BEGIN
-    SELECT 
+    SELECT
         mw.id,
         mw.nummer,
         mw.medewerkertype,
@@ -124,7 +124,7 @@ END$$
 -- =========================================
 CREATE PROCEDURE SP_GetAllPatientenDropdown()
 BEGIN
-    SELECT 
+    SELECT
         pt.id,
         pt.nummer,
         CONCAT_WS(' ', prs.voornaam, prs.tussenvoegsel, prs.achternaam) AS naam

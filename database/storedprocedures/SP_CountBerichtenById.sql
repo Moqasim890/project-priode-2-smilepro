@@ -5,7 +5,7 @@ CREATE PROCEDURE SP_CountBerichtenById(
     IN p_patientid INT
 )
 BEGIN
-    SELECT 
+    SELECT
         COUNT(*) AS AantalBerichten
     FROM communicatie
     WHERE patientid = p_patientid;
