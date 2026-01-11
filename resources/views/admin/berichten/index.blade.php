@@ -23,17 +23,17 @@
 				<div class="card-body p-4">
 					<div class="row">
 						<div class="col-6">
-							<h6>Van: 
-								@if ( $bericht->medewerkerid == NULL || "" )
+							<h6>Van:
+								@if ( $bericht->medewerkerid == NULL || $bericht->medewerkerid == "" )
 									SYSTEEM
-								@else 
+								@else
 									{{ $bericht->medewerkerNaam }}
 								@endif
 							</h6>
-							<h6>Aan: 
+							<h6>Aan:
 								@if ( $bericht->patientNaam == $naam )
 									U
-								@else 
+								@else
 									{{ $bericht->patientNaam }}
 								@endif
 							</h6>
