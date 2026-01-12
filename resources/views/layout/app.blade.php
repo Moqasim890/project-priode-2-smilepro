@@ -65,7 +65,7 @@
                                 </a>
                             </li>
                         @endif
-                        
+
                         @if(auth()->user()->hasAnyRole(['Tandarts', 'Mondhygiënist', 'Assistent']))
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('medewerker.dashboard') }}">
@@ -83,7 +83,7 @@
                                 </a>
                             </li>
                         @endif
-                        
+
                         @if(auth()->user()->hasRole('Patiënt'))
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('Patient.berichten.index') }}">
@@ -139,20 +139,42 @@
     {{-- MAIN CONTENT --}}
     <main class="flex-grow-1">
         {{-- Flash Messages --}}
-        @if(session('success'))
+        @if(session('success') || session('ok'))
         <div class="container mt-3">
-            <div class="alert alert-success alert-dismissible fade show">
-                <i class="bi bi-check-circle me-1"></i>{{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="alert alert-success alert-dismissible fade show shadow-sm border-0" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white;">
+                <i class="bi bi-check-circle-fill me-2" style="font-size: 1.2rem;"></i>
+                <strong>{{ session('success') ?? session('ok') }}</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
             </div>
         </div>
         @endif
 
         @if(session('error'))
         <div class="container mt-3">
-            <div class="alert alert-danger alert-dismissible fade show">
-                <i class="bi bi-exclamation-circle me-1"></i>{{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white;">
+                <i class="bi bi-exclamation-triangle-fill me-2" style="font-size: 1.2rem;"></i>
+                <strong>{{ session('error') }}</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+        @endif
+
+        @if(session('warning'))
+        <div class="container mt-3">
+            <div class="alert alert-warning alert-dismissible fade show shadow-sm border-0" style="background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%); color: white;">
+                <i class="bi bi-exclamation-circle-fill me-2" style="font-size: 1.2rem;"></i>
+                <strong>{{ session('warning') }}</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+        @endif
+
+        @if(session('info'))
+        <div class="container mt-3">
+            <div class="alert alert-info alert-dismissible fade show shadow-sm border-0" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white;">
+                <i class="bi bi-info-circle-fill me-2" style="font-size: 1.2rem;"></i>
+                <strong>{{ session('info') }}</strong>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
             </div>
         </div>
         @endif
@@ -172,16 +194,20 @@
     <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
         data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header text-white border-0" style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                     <h5 class="modal-title"><i class="bi bi-check-circle-fill me-2"></i>Gelukt!</h5>
                 </div>
-                <div class="modal-body text-center py-4">
-                    <i class="bi bi-check-circle text-success" style="font-size: 4rem;"></i>
-                    <h4 class="mt-3" id="successMessage">{{ session('success') }}</h4>
+                <div class="modal-body text-center py-5">
+                    <div class="mb-3">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+                    </div>
+                    <h4 class="mt-3 text-success fw-bold" id="successMessage">{{ session('success') ?? session('ok') }}</h4>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-check-lg me-1"></i>OK
+                    </button>
                 </div>
             </div>
         </div>
@@ -191,16 +217,20 @@
     <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
         data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header text-white border-0" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);">
                     <h5 class="modal-title"><i class="bi bi-exclamation-triangle-fill me-2"></i>Fout</h5>
                 </div>
-                <div class="modal-body text-center py-4">
-                    <i class="bi bi-x-circle text-danger" style="font-size: 4rem;"></i>
-                    <h4 class="mt-3" id="errorMessage">{{ session('error') }}</h4>
+                <div class="modal-body text-center py-5">
+                    <div class="mb-3">
+                        <i class="bi bi-x-circle-fill text-danger" style="font-size: 5rem;"></i>
+                    </div>
+                    <h4 class="mt-3 text-danger fw-bold" id="errorMessage">{{ session('error') }}</h4>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">OK</button>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-danger px-4" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg me-1"></i>Sluiten
+                    </button>
                 </div>
             </div>
         </div>
@@ -209,17 +239,17 @@
     {{-- Page-specific scripts --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Show success modal if there's a success message
-            @if(session('success'))
+            // Show success modal if there's a success or ok message
+            @if(session('success') || session('ok'))
                 const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
             @endif
 
-                // Show error modal if there's an error message
-                @if(session('error'))
-                    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
-                    errorModal.show();
-                @endif
+            // Show error modal if there's an error message
+            @if(session('error'))
+                const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                errorModal.show();
+            @endif
         });
     </script>
 </body>

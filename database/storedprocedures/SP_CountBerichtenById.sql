@@ -1,3 +1,5 @@
+USE tandarts;
+
 DROP PROCEDURE IF EXISTS SP_CountBerichtenById;
 DELIMITER $$
 

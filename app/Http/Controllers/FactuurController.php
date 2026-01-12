@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\models\FactuurModel as factuur;
-use App\models\PatientModel as patient;
+use App\Models\FactuurModel as factuur;
+use App\Models\PatientModel as patient;
 
 
 /**
@@ -67,9 +67,9 @@ class FactuurController extends Controller
         $res = factuur::create($data);
 
         if ($res->affected < 0) {
-            return back()->with('error', 'er is iets mis gegaan');
+            return back()->with('error', 'Er is iets misgegaan bij het aanmaken van de factuur');
         } else {
-            return redirect()->route('medewerker.factuur.index')->with('ok', 'medewerker gemaakt.');
+            return redirect()->route('medewerker.factuur.index')->with('success', 'Factuur succesvol aangemaakt!');
         }
     }
 

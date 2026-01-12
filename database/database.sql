@@ -1,4 +1,4 @@
--- Active: 1764442526270@@127.0.0.1@3333@smilepro
+
 -- =========================================
 -- SMILEPRO DATABASE SETUP
 -- Versie: 1.0
@@ -8,11 +8,11 @@
 -- =========================================
 -- DATABASE AANMAKEN
 -- =========================================
-CREATE DATABASE IF NOT EXISTS smilepro
+CREATE DATABASE IF NOT EXISTS tandarts
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
-USE smilepro;
+USE tandarts;
 
 -- =========================================
 -- TABELLEN VERWIJDEREN (schone lei)
@@ -263,14 +263,14 @@ CREATE PROCEDURE SP_GetTotaalFactuurBedrag(
 BEGIN
     IF p_status IS NULL OR p_status = '' THEN
         -- Alle actieve facturen
-        SELECT 
+        SELECT
             COUNT(*) as aantal_facturen,
             COALESCE(SUM(bedrag), 0) as totaal_bedrag
         FROM factuur
         WHERE isactief = 1;
     ELSE
         -- Facturen met specifieke status
-        SELECT 
+        SELECT
             COUNT(*) as aantal_facturen,
             COALESCE(SUM(bedrag), 0) as totaal_bedrag
         FROM factuur
@@ -289,7 +289,7 @@ CREATE PROCEDURE SP_GetFacturenPerPatient(
     IN p_patientid INT
 )
 BEGIN
-    SELECT 
+    SELECT
         f.id,
         f.nummer,
         f.datum,
@@ -302,7 +302,7 @@ BEGIN
     INNER JOIN persoon p ON pat.persoonid = p.id
     LEFT JOIN factuur_behandeling fb ON f.id = fb.factuurid AND fb.isactief = 1
     LEFT JOIN behandeling b ON fb.behandelingid = b.id
-    WHERE f.patientid = p_patientid 
+    WHERE f.patientid = p_patientid
         AND f.isactief = 1
     GROUP BY f.id, f.nummer, f.datum, f.bedrag, f.status, p.voornaam, p.tussenvoegsel, p.achternaam
     ORDER BY f.datum DESC;
@@ -387,9 +387,9 @@ INSERT INTO persoon (gebruikerid, voornaam, tussenvoegsel, achternaam, geboorted
 (NULL, 'David', 'van der', 'Berg', '1982-06-25', 1);
 
 -- Patienten (gebruik de zojuist aangemaakte personen, skip de eerste 5 test users)
-INSERT INTO patient (persoonid, nummer, opmerking, isactief) 
-SELECT id, CONCAT('P', LPAD(id - 5, 5, '0')), 
-    CASE 
+INSERT INTO patient (persoonid, nummer, opmerking, isactief)
+SELECT id, CONCAT('P', LPAD(id - 5, 5, '0')),
+    CASE
         WHEN voornaam = 'Jan' THEN 'Regelmatige controles, geen bijzonderheden'
         WHEN voornaam = 'Sarah' THEN 'Gevoelige tanden, regelmatig tandsteen'
         WHEN voornaam = 'Mohammed' THEN 'Orthodontie behandeling in 2023 afgerond'
@@ -400,15 +400,15 @@ SELECT id, CONCAT('P', LPAD(id - 5, 5, '0')),
         ELSE 'Standaard patiënt'
     END,
     1
-FROM persoon 
+FROM persoon
 WHERE voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt')  -- Skip test users
 ORDER BY id;
 
 -- Contactgegevens voor patienten (gebruik patient IDs dynamisch)
 INSERT INTO contact (patientid, straatnaam, huisnummer, postcode, plaats, mobiel, email, isactief)
-SELECT 
+SELECT
     pt.id,
-    CASE 
+    CASE
         WHEN ps.voornaam = 'Jan' THEN 'Hoofdstraat'
         WHEN ps.voornaam = 'Sarah' THEN 'Kerkstraat'
         WHEN ps.voornaam = 'Mohammed' THEN 'Plein'
@@ -417,7 +417,7 @@ SELECT
         WHEN ps.voornaam = 'Sophie' THEN 'Dreef'
         WHEN ps.voornaam = 'David' THEN 'Park'
     END,
-    CASE 
+    CASE
         WHEN ps.voornaam = 'Jan' THEN '123'
         WHEN ps.voornaam = 'Sarah' THEN '45'
         WHEN ps.voornaam = 'Mohammed' THEN '7'
@@ -429,7 +429,7 @@ SELECT
     CONCAT(SUBSTRING('1234567890', pt.id, 4), 'AB'),
     'Utrecht',
     CONCAT('06', LPAD(pt.id * 12345678, 8, '0')),
-    CASE 
+    CASE
         WHEN ps.gebruikerid IS NOT NULL THEN LOWER(CONCAT(ps.voornaam, '.', REPLACE(CONCAT(COALESCE(ps.tussenvoegsel, ''), ps.achternaam), ' ', ''), '@patient.nl'))
         ELSE CONCAT(LOWER(ps.voornaam), '.', LOWER(SUBSTRING(ps.achternaam, 1, 1)), '@example.com')
     END,
@@ -440,7 +440,7 @@ WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', '
 
 -- Behandelingen (gebruik patient IDs dynamisch)
 INSERT INTO behandeling (medewerkerid, patientid, datum, tijd, behandelingtype, omschrijving, kosten, status, isactief)
-SELECT 
+SELECT
     NULL,
     pt.id,
     DATE_SUB(CURDATE(), INTERVAL (pt.id * 7) DAY),
@@ -454,7 +454,7 @@ FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
 WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt')
 UNION ALL
-SELECT 
+SELECT
     NULL,
     pt.id,
     DATE_SUB(CURDATE(), INTERVAL (pt.id * 5) DAY),
@@ -468,7 +468,7 @@ FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
 WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt') AND pt.id <= (SELECT MIN(id) + 4 FROM patient)
 UNION ALL
-SELECT 
+SELECT
     NULL,
     pt.id,
     DATE_ADD(CURDATE(), INTERVAL (pt.id * 3) DAY),
@@ -480,20 +480,95 @@ SELECT
     1
 FROM patient pt
 INNER JOIN persoon ps ON pt.persoonid = ps.id
-WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt') AND pt.id <= (SELECT MIN(id) + 2 FROM patient);
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt') AND pt.id <= (SELECT MIN(id) + 2 FROM patient)
+UNION ALL
+-- Wortelkanaalbehandelingen
+SELECT
+    NULL,
+    pt.id,
+    DATE_SUB(CURDATE(), INTERVAL (pt.id * 10) DAY),
+    TIME('14:00:00'),
+    'Wortelkanaalbehandelingen',
+    CONCAT('Wortelkanaalbehandeling kies ', CASE WHEN pt.id % 4 = 0 THEN '16' WHEN pt.id % 4 = 1 THEN '26' WHEN pt.id % 4 = 2 THEN '36' ELSE '46' END),
+    450.00,
+    'Behandeld',
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt') AND pt.id % 3 = 0
+UNION ALL
+-- Orthodontie behandelingen
+SELECT
+    NULL,
+    pt.id,
+    DATE_SUB(CURDATE(), INTERVAL (pt.id * 20) DAY),
+    TIME('10:30:00'),
+    'Orthodontie',
+    CONCAT('Beugel controle - ', ps.voornaam),
+    125.00,
+    'Behandeld',
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt') AND pt.id % 4 = 0
+UNION ALL
+-- Extra Vullingen (verschillende statussen)
+SELECT
+    NULL,
+    pt.id,
+    DATE_ADD(CURDATE(), INTERVAL (pt.id * 5) DAY),
+    TIME('15:00:00'),
+    'Vullingen',
+    'Meerdere vullingen nodig - intake',
+    175.00,
+    'Onbehandeld',
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt') AND pt.id % 5 = 0
+UNION ALL
+-- Uitgestelde behandelingen
+SELECT
+    NULL,
+    pt.id,
+    DATE_ADD(CURDATE(), INTERVAL 30 DAY),
+    TIME('09:00:00'),
+    CASE WHEN pt.id % 2 = 0 THEN 'Gebitsreiniging' ELSE 'Controles' END,
+    'Uitgesteld op verzoek patiënt',
+    CASE WHEN pt.id % 2 = 0 THEN 85.00 ELSE 75.00 END,
+    'Uitgesteld',
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt') AND pt.id % 6 = 0
+UNION ALL
+-- Extra Orthodontie (onbehandeld, toekomstig)
+SELECT
+    NULL,
+    pt.id,
+    DATE_ADD(CURDATE(), INTERVAL 14 DAY),
+    TIME('11:00:00'),
+    'Orthodontie',
+    'Nieuwe beugel plaatsing',
+    850.00,
+    'Onbehandeld',
+    1
+FROM patient pt
+INNER JOIN persoon ps ON pt.persoonid = ps.id
+WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', 'Assistent', 'Patiënt') AND pt.id % 7 = 0;
 
 -- Facturen (gebruik patient IDs dynamisch)
 INSERT INTO factuur (patientid, nummer, datum, bedrag, status, isactief)
-SELECT 
+SELECT
     pt.id,
     CONCAT('F2024-', LPAD(pt.id, 4, '0')),
     DATE_SUB(CURDATE(), INTERVAL (pt.id * 6) DAY),
-    CASE 
+    CASE
         WHEN pt.id % 3 = 0 THEN 160.00
         WHEN pt.id % 3 = 1 THEN 75.00
         ELSE 150.00
     END,
-    CASE 
+    CASE
         WHEN pt.id % 4 = 0 THEN 'Betaald'
         WHEN pt.id % 4 = 1 THEN 'Verzonden'
         WHEN pt.id % 4 = 2 THEN 'Onbetaald'
@@ -506,21 +581,21 @@ WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', '
 
 -- Factuur behandeling koppelingen (koppel eerste behandeling aan factuur)
 INSERT INTO factuur_behandeling (factuurid, behandelingid, isactief)
-SELECT 
+SELECT
     f.id,
     b.id,
     1
 FROM factuur f
 INNER JOIN behandeling b ON f.patientid = b.patientid
 WHERE b.id = (
-    SELECT MIN(b2.id) 
-    FROM behandeling b2 
+    SELECT MIN(b2.id)
+    FROM behandeling b2
     WHERE b2.patientid = f.patientid
 );
 
 -- Afspraken (gebruik patient IDs dynamisch)
 INSERT INTO afspraken (patientid, medewerkerid, datum, tijd, status, isactief)
-SELECT 
+SELECT
     pt.id,
     NULL,
     DATE_ADD(CURDATE(), INTERVAL (pt.id * 10) DAY),
@@ -533,7 +608,7 @@ WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', '
 
 -- Communicatie (gebruik patient IDs dynamisch)
 INSERT INTO communicatie (patientid, medewerkerid, bericht, verzonden_datum, isactief)
-SELECT 
+SELECT
     pt.id,
     NULL,
     CONCAT('Herinnering: uw afspraak is ingepland voor ', ps.voornaam),
@@ -545,7 +620,7 @@ WHERE ps.voornaam NOT IN ('Praktijkmanager', 'Dr. Tandarts', 'Mondhygiënist', '
 
 -- Feedback (gebruik patient IDs dynamisch)
 INSERT INTO feedback (patientid, beoordeling, praktijkemail, praktijktelefoon, opmerking, isactief)
-SELECT 
+SELECT
     pt.id,
     4 + (pt.id % 2),
     'info@smilepro.nl',
