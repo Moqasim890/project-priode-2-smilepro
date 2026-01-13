@@ -28,14 +28,6 @@ Features:
             </a>
         </div>
 
-        {{-- Success melding na acties (bijv. factuur aangemaakt) --}}
-        @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        @endif
-
         {{-- Statistiek Cards - Toon totaalbedragen per status --}}
         <div class="row mb-4">
             @php

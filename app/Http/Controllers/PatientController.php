@@ -28,7 +28,7 @@ class PatientController extends Controller
         $berichten = Patient::SP_GetBerichtenById($patientid);
         // dd($patientid);
 
-        return view('Patient.berichten.index', [
+        return view('patient.berichten.index', [
             'berichten' => $berichten,
             'naam'      => $naam
         ]);
